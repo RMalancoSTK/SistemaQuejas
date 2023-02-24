@@ -1,7 +1,4 @@
 <?php
-
-require_once 'controllers/ErrorController.php';
-
 class Utils
 {
 
