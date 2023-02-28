@@ -4,6 +4,11 @@
             <div class="col-sm-6">
                 <h1>Error 404</h1>
             </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <?php echo Utils::getBreadCrumbs(); ?>
+                </ol>
+            </div>
         </div>
     </div>
 </section>
