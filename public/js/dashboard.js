@@ -1,6 +1,4 @@
-// BASE_URL = localStorage.getItem("base_url").toString();
-const base_url = localStorage.getItem("base_url");
-BASE_URL = base_url !== null ? base_url.toString() : "";
+BASE_URL = "http://localhost:8080/SistemaQuejas/";
 
 if (document.getElementById("quejasChart")) {
   $.ajax({
