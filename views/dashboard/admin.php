@@ -1,29 +1,26 @@
-<!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Dashboard</h1>
-            </div><!-- /.col -->
+                <h1 class="m-0">Dashboard Principal Administrador</h1>
+                <p class="text-muted">Bienvenido <?= $_SESSION['nombre'] ?>, al sistema de quejas y sugerencias.</p>
+            </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <?php echo Utils::getBreadCrumbs(); ?>
                 </ol>
-            </div><!-- /.col -->
+            </div>
         </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+    </div>
 </div>
-<!-- /.content-header -->
 
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="info-box">
                     <span class="info-box-icon bg-info elevation-1"><i class="fas fa-thumbs-down"></i></span>
                     <div class="info-box-content">
-                        <!-- Total de quejas registradas -->
                         <span class="info-box-text">Registradas</span>
                         <span class="info-box-number">
                             <?= $this->getTotalQuejas(); ?>
@@ -90,12 +87,9 @@
                                 </p>
 
                                 <div class="chart">
-                                    <!-- Sales Chart Canvas -->
-                                    <canvas id="salesChart" height="180" style="height: 180px;"></canvas>
+                                    <canvas id="quejasChart" height="180" style="height: 180px;"></canvas>
                                 </div>
-                                <!-- /.chart-responsive -->
                             </div>
-                            <!-- /.col -->
                             <div class="col-md-4">
                                 <p class="text-center">
                                     <strong>Reporte Mensual</strong>
@@ -128,14 +122,14 @@
                         <div class="row">
                             <div class="col-sm-4 col-4">
                                 <div class="description-block border-right">
-                                    <span class="description-percentage text-success"><?= $this->getPorcentajeQuejasPendientes(); ?>%</span>
+                                    <span class="description-percentage text-warning"><?= $this->getPorcentajeQuejasPendientes(); ?>%</span>
                                     <h5 class="description-header"><?= $this->getTotalQuejasPendientes(); ?></h5>
                                     <span class="description-text">TOTAL DE QUEJAS PENDIENTES</span>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-4">
                                 <div class="description-block border-right">
-                                    <span class="description-percentage text-warning"><?= $this->getPorcentajeQuejasAtendidas(); ?>%</span>
+                                    <span class="description-percentage text-success"><?= $this->getPorcentajeQuejasAtendidas(); ?>%</span>
                                     <h5 class="description-header"><?= $this->getTotalQuejasAtendidas(); ?></h5>
                                     <span class="description-text">TOTAL DE QUEJAS ATENDIDAS</span>
                                 </div>
@@ -154,7 +148,6 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <!-- TABLE: LATEST ORDERS -->
                 <div class="card">
                     <div class="card-header border-transparent">
                         <h3 class="card-title">Últimas Quejas</h3>
@@ -165,7 +158,6 @@
                             </button>
                         </div>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table m-0">
@@ -203,18 +195,12 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- /.table-responsive -->
                     </div>
-                    <!-- /.card-body -->
                     <div class="card-footer clearfix">
                         <a href="<?= BASE_URL ?>quejas/index" class="btn btn-sm btn-secondary float-right">Ver Todas las Quejas</a>
                     </div>
-                    <!-- /.card-footer -->
                 </div>
-                <!-- /.card -->
             </div>
-            <!-- /.col -->
         </div>
-    </div>
     </div>
 </section>

@@ -88,7 +88,20 @@ class UsuarioModel
     public function existeUsuario($usuario)
     {
         // PDO Statement
-        $sql = "SELECT * FROM usuarios WHERE usuario = :usuario";
+        $sql = "SELECT
+        u.idusuario,
+        CONCAT(u.nombre, ' ', u.apellido) AS nombre,
+        u.usuario,
+        u.password,
+        u.email,
+        u.estado,
+        d.nombre AS departamento,
+        r.rol AS rol,
+        u.idrol
+        FROM usuarios u
+        INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+        INNER JOIN roles r ON u.idrol = r.idrol
+        WHERE usuario = :usuario";
         $statement = $this->db->prepare($sql);
         $statement->bindParam(':usuario', $usuario);
         $statement->execute();

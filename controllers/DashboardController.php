@@ -14,17 +14,32 @@ class DashboardController
         $this->ultimodiadelmesactual = date('t-M-Y');
     }
 
-    public function index()
+
+    private function loadView($view)
     {
         if (isset($_SESSION['active'])) {
             include_once 'views/layout/header.php';
             include_once 'views/layout/navbar.php';
             include_once 'views/layout/sidebar.php';
-            require_once 'views/dashboard/index.php';
+            require_once "views/dashboard/$view.php";
             include_once 'views/layout/footer.php';
         } else {
             header(LOCATION_LOGIN);
         }
+    }
+
+    public function index()
+    {
+        if (!isset($_SESSION['idrol']) || $_SESSION['idrol'] != 1) {
+            $this->loadView('user');
+        } else {
+            $this->loadView('admin');
+        }
+    }
+
+    public function inicio()
+    {
+        header(LOCATION_DASHBOARD);
     }
 
     public function getTotalQuejas()
@@ -51,21 +66,21 @@ class DashboardController
     {
         $total = $this->getTotalQuejas();
         $pendientes = $this->getTotalQuejasPendientes();
-        return ($pendientes * 100) / $total;
+        return number_format(($pendientes * 100) / $total, 2);
     }
 
     public function getPorcentajeQuejasAtendidas()
     {
         $total = $this->getTotalQuejas();
         $atendidas = $this->getTotalQuejasAtendidas();
-        return ($atendidas * 100) / $total;
+        return number_format(($atendidas * 100) / $total, 2);
     }
 
     public function getPorcentajeQuejasRechazadas()
     {
         $total = $this->getTotalQuejas();
         $rechazadas = $this->getTotalQuejasRechazadas();
-        return ($rechazadas * 100) / $total;
+        return number_format(($rechazadas * 100) / $total, 2);
     }
 
     public function getUltimasQuejas()
@@ -80,15 +95,8 @@ class DashboardController
     public function obtenerquejas()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $idestado = $_POST['idestado'];
-
-            if (!isset($idestado) || empty($idestado)) {
-                echo json_encode(array('status' => 'error', 'message' => 'El id del estado es requerido'));
-                die();
-            }
-
             $arreglo = array();
-            $query = $this->quejasModel->quejasdelmesactual($idestado);
+            $query = $this->quejasModel->quejasdelmesactual();
             while ($data = $query->fetch(PDO::FETCH_ASSOC)) {
                 $arreglo[] = $data;
             }
@@ -98,5 +106,34 @@ class DashboardController
             echo json_encode(array('status' => 'error', 'message' => 'Método no permitido'));
             die();
         }
+    }
+
+    public function getMiTotalRegistros($idusuario)
+    {
+        return $this->quejasModel->getMiTotalRegistros($idusuario);
+    }
+
+    public function getMiTotalRegistrosPendientes($idusuario)
+    {
+        return $this->quejasModel->getMiTotalRegistrosPendientes($idusuario);
+    }
+
+    public function getMiTotalRegistrosAtendidos($idusuario)
+    {
+        return $this->quejasModel->getMiTotalRegistrosAtendidos($idusuario);
+    }
+
+    public function getMiTotalRegistrosRechazados($idusuario)
+    {
+        return $this->quejasModel->getMiTotalRegistrosRechazados($idusuario);
+    }
+
+    public function getUltimasQuejasUsuario($idusuario)
+    {
+        $ultimasQuejas = $this->quejasModel->getUltimasQuejasUsuario($idusuario);
+        $ultimasQuejas = array_map(function ($queja) {
+            return (object) $queja;
+        }, $ultimasQuejas);
+        return $ultimasQuejas;
     }
 }

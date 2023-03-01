@@ -1,4 +1,6 @@
 <?php
+// definimos la zona horaria
+date_default_timezone_set('America/Mexico_City');
 
 // Constantes de la configuración de la base de datos
 define("DB_HOST", "localhost");
@@ -9,7 +11,7 @@ define("DB_CHAR", "utf8");
 
 // Constantes de la configuración de la aplicación
 define("CONTROLLER_DEFAULT", "DashboardController");
-define("ACTION_DEFAULT", "index");
+define("ACTION_DEFAULT", "inicio");
 define("BASE_URL", getBaseUrl());
 
 function getBaseUrl()
@@ -24,8 +26,10 @@ function getBaseUrl()
 // Constantes los headers "'Location: '" de la aplicación
 define("LOCATION_BASE_URL", "Location: " . BASE_URL); // Redirecciona a la página principal
 define("LOCATION_LOGIN", "Location: " . BASE_URL . "login/index"); // Redirecciona a la página de login
-
-
+define("LOCATION_DASHBOARD", "Location: " . BASE_URL . "dashboard/index"); // Redirecciona a la página de dashboard
+define("LOCATION_QUEJAS_CREAR", "Location: " . BASE_URL . "quejas/crear"); // Redirecciona a la página de crear quejas
+define("LOCATION_QUEJAS_MISQUEJAS", "Location: " . BASE_URL . "quejas/misquejas"); // Redirecciona a la página de mis quejas
+define("LOCATION_QUEJAS_EDITAR", "Location: " . BASE_URL . "quejas/editar/"); // Redirecciona a la página de editar quejas
 
 // MENSAJES DE ERRORES Y EXITOS
 // Mensajes de error

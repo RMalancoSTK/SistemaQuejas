@@ -4,14 +4,23 @@ class ErrorController
 {
     private $messageerror;
 
+    private function loadView($view)
+    {
+        if (isset($_SESSION['active'])) {
+            include_once 'views/layout/header.php';
+            include_once 'views/layout/navbar.php';
+            include_once 'views/layout/sidebar.php';
+            require_once "views/error/$view.php";
+            include_once 'views/layout/footer.php';
+        } else {
+            header(LOCATION_LOGIN);
+        }
+    }
+
     public function index()
     {
         Utils::comprobarSesion();
-        include_once 'views/layout/header.php';
-        include_once 'views/layout/navbar.php';
-        include_once 'views/layout/sidebar.php';
-        require_once 'views/error/index.php';
-        include_once 'views/layout/footer.php';
+        $this->loadView('index');
     }
 
     public function getError404()

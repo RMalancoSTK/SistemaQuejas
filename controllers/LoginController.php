@@ -36,8 +36,10 @@ class LoginController
                         $_SESSION['active'] = true;
                         $_SESSION['idusuario'] = $existeUsuario['idusuario'];
                         $_SESSION['nombre'] = $existeUsuario['nombre'];
+                        $_SESSION['departamento'] = $existeUsuario['departamento'];
                         $_SESSION['usuario'] = $existeUsuario['usuario'];
                         $_SESSION['idrol'] = $existeUsuario['idrol'];
+                        $_SESSION['rol'] = $existeUsuario['rol'];
                         header(LOCATION_BASE_URL);
                     }
                 } else {

@@ -1,155 +1,42 @@
-var primerDiaDelMes = document.getElementById("primerdiadelmesactual").value;
-var ultimoDiaDelMes = document.getElementById("ultimodiadelmesactual").value;
-var fechaInicio = new Date(primerDiaDelMes);
-var fechaFin = new Date(ultimoDiaDelMes);
-var diferenciaEnTiempo = fechaFin.getTime() - fechaInicio.getTime();
-var diferenciaEnDias = diferenciaEnTiempo / (1000 * 3600 * 24) + 1;
-const diasDelMes = [];
-let pendientes = [];
-let atendidas = [];
-let rechazadas = [];
+// BASE_URL = localStorage.getItem("base_url").toString();
+const base_url = localStorage.getItem("base_url");
+BASE_URL = base_url !== null ? base_url.toString() : "";
 
-for (var i = 0; i < diferenciaEnDias; i++) {
-  var dia = new Date(fechaInicio.getTime() + i * 24 * 60 * 60 * 1000).getDate();
-  diasDelMes.push(dia);
-}
-
-function arrayPendientes(callback) {
-  // ajax para obtener los datos de las quejas pendientes por metodo POST y idestado = 1
+if (document.getElementById("quejasChart")) {
   $.ajax({
-    url: "dashboard/obtenerquejas",
+    url: BASE_URL + "dashboard/obtenerquejas",
     type: "POST",
     async: true,
-    data: {
-      idestado: 1,
-    },
     success: function (response) {
-      if (response != 0) {
-        var data = JSON.parse(response);
-        const cantidadpendientes = [];
-        for (var i = 0; i < diasDelMes.length; i++) {
-          var encontrardia = false;
-          for (var j = 0; j < data.length; j++) {
-            var dia = data[j].dia;
-            var total = data[j].total;
-            if (diasDelMes[i] == dia) {
-              cantidadpendientes.push(total);
-              encontrardia = true;
-            }
-          }
-          if (encontrardia == false) {
-            cantidadpendientes.push(0);
-          }
-        }
-        callback(cantidadpendientes);
-      }
+      var data = JSON.parse(response);
+      const diasDelMes = [];
+      const pendientes = [];
+      const atendidas = [];
+      const rechazadas = [];
+      data.forEach((element) => {
+        diasDelMes.push(element.dia);
+        pendientes.push(element.totalpendientes);
+        atendidas.push(element.totalatendidas);
+        rechazadas.push(element.totalrechazadas);
+      });
+      construirGrafico(diasDelMes, pendientes, atendidas, rechazadas);
     },
     error: function (error) {
-      callback([]);
+      console.log(error);
     },
   });
 }
 
-function arrayAtendidas(callback) {
-  // ajax para obtener los datos de las quejas pendientes por metodo POST y idestado = 2
-  $.ajax({
-    url: "dashboard/obtenerquejas",
-    type: "POST",
-    async: true,
-    data: {
-      idestado: 2,
-    },
-    success: function (response) {
-      if (response != 0) {
-        var data = JSON.parse(response);
-        const cantidadatendidas = [];
-        for (var i = 0; i < diasDelMes.length; i++) {
-          var encontrardia = false;
-          for (var j = 0; j < data.length; j++) {
-            var dia = data[j].dia;
-            var total = data[j].total;
-            if (diasDelMes[i] == dia) {
-              cantidadatendidas.push(total);
-              encontrardia = true;
-            }
-          }
-          if (encontrardia == false) {
-            cantidadatendidas.push(0);
-          }
-        }
-        callback(cantidadatendidas);
-      }
-    },
-    error: function (error) {
-      callback([]);
-    },
-  });
-}
-
-function arrayRechazadas(callback) {
-  // ajax para obtener los datos de las quejas pendientes por metodo POST y idestado = 3
-  $.ajax({
-    url: "dashboard/obtenerquejas",
-    type: "POST",
-    async: true,
-    data: {
-      idestado: 3,
-    },
-    success: function (response) {
-      if (response != 0) {
-        var data = JSON.parse(response);
-        const cantidadrechazadas = [];
-        for (var i = 0; i < diasDelMes.length; i++) {
-          var encontrardia = false;
-          for (var j = 0; j < data.length; j++) {
-            var dia = data[j].dia;
-            var total = data[j].total;
-            if (diasDelMes[i] == dia) {
-              cantidadrechazadas.push(total);
-              encontrardia = true;
-            }
-          }
-          if (encontrardia == false) {
-            cantidadrechazadas.push(0);
-          }
-        }
-        callback(cantidadrechazadas);
-      }
-    },
-    error: function (error) {
-      callback([]);
-    },
-  });
-}
-
-arrayPendientes(function (cantidadPendientes) {
-  for (var i = 0; i < cantidadPendientes.length; i++) {
-    pendientes.push(cantidadPendientes[i]);
-  }
-});
-
-arrayAtendidas(function (cantidadAtendidas) {
-  for (var i = 0; i < cantidadAtendidas.length; i++) {
-    atendidas.push(cantidadAtendidas[i]);
-  }
-});
-
-arrayRechazadas(function (cantidadRechazadas) {
-  for (var i = 0; i < cantidadRechazadas.length; i++) {
-    rechazadas.push(cantidadRechazadas[i]);
-  }
-});
-
-$(function () {
+function construirGrafico(diasDelMes, pendientes, atendidas, rechazadas) {
   "use strict";
-  var salesChartCanvas = $("#salesChart").get(0).getContext("2d");
-  var salesChartData = {
+  var quejasChartCanvas = $("#quejasChart").get(0).getContext("2d");
+  var quejasChartData = {
     labels: diasDelMes,
     datasets: [
       {
         label: "Pendientes",
-        backgroundColor: "#007bff",
-        borderColor: "#007bff",
+        backgroundColor: "#ffc107",
+        borderColor: "#ffc107",
         data: pendientes,
       },
       {
@@ -167,7 +54,7 @@ $(function () {
     ],
   };
 
-  var salesChartOptions = {
+  var quejasChartOptions = {
     maintainAspectRatio: false,
     responsive: true,
     legend: {
@@ -190,9 +77,9 @@ $(function () {
       ],
     },
   };
-  var salesChart = new Chart(salesChartCanvas, {
+  var quejasChart = new Chart(quejasChartCanvas, {
     type: "bar",
-    data: salesChartData,
-    options: salesChartOptions,
+    data: quejasChartData,
+    options: quejasChartOptions,
   });
-});
+}

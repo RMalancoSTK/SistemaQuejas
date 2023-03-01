@@ -9,4 +9,9 @@ class ApiController
     {
         $this->apiModel = new ApiModel();
     }
+
+    public function obtenerBaseURL()
+    {
+        echo json_encode(array('status' => 'ok', 'base_url' => BASE_URL));
+    }
 }

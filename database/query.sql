@@ -71,6 +71,22 @@ CREATE TABLE IF NOT EXISTS quejas (
   CONSTRAINT fkquejasestados FOREIGN KEY (idestado) REFERENCES `estados`(idestado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+
+--crear la tabla de archivos
+CREATE TABLE archivos (
+  idarchivo int(11) NOT NULL AUTO_INCREMENT,
+  idqueja int(11) NOT NULL,
+  nombrearchivo varchar(50) NOT NULL,
+  tipoarchivo varchar(50) NOT NULL,
+  tamanoarchivo int(11) NOT NULL,
+  ruta varchar(50) NOT NULL,
+  fechacreacion datetime NOT NULL,
+  fechaactualizacion datetime NOT NULL,
+  estado int(11) NOT NULL,
+  PRIMARY KEY (idarchivo),
+  CONSTRAINT fkarchivosquejas FOREIGN KEY (`idqueja`) REFERENCES `quejas`(`idqueja`) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 CREATE TABLE comentarios (
   idcomentario int(11) NOT NULL AUTO_INCREMENT,
   idqueja int(11) NOT NULL,
@@ -105,6 +121,12 @@ INSERT INTO `roles` (`idrol`, `rol`) VALUES
 
 INSERT INTO `usuarios` (idusuario, idrol, iddepartamento, nombre, apellido, email, usuario, password, estado) VALUES
 (1, 1, 1, 'Administrador', 'Administrador', 'admin@localhost', 'admin', '$2y$04$tLyTI7OutXs4oQkY7UsiauVOrF0VPhwFIpAf2zNFjeuA6OS5tR.56', 1);
+
+-- registrar un usuario
+INSERT INTO `usuarios` ( idrol, iddepartamento, nombre, apellido, email, usuario, password, estado) VALUES
+( 2, 1, 'Usuario', 'Usuario', 'usuario@localhost', 'usuario', '$2y$04$tLyTI7OutXs4oQkY7UsiauVOrF0VPhwFIpAf2zNFjeuA6OS5tR.56', 1);
+
+SELECT * FROM usuarios;
 
 INSERT INTO `turnos` (`idturno`, `nombre`, `horainicio`, `horafin`, `estado`) VALUES
 (1, 'Turno A', '08:00:00', '12:00:00', 1),
@@ -267,25 +289,51 @@ AND idestado = 2
 GROUP BY dia;
 
 -- insertamos una queja y un comentario
-INSERT INTO `quejas` (`idqueja`, `idusuario`, `idestado`, `idcategoria`, `idturno`, `asunto`, `descripcion`, `fechacreacion`, `fechaactualizacion`, `estado`) VALUES
-(1, 1, 1, 1, 1, 'Asunto 1', 'Descripcion 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
 
-INSERT INTO `comentarios` (`idcomentario`, `idqueja`, `idusuario`, `comentario`, `fechacreacion`, `fechaactualizacion`, `estado`) VALUES
-(1, 1, 1, 'Comentario 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
 
-SELECT dates.dia, COALESCE(total, 0) AS total_quejas
+INSERT INTO `comentarios` (`idqueja`, `idusuario`, `comentario`, `fechacreacion`, `fechaactualizacion`, `estado`) VALUES
+( 18, 1, 'Comentario 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
+
+
+SELECT q.idqueja,u.nombre AS usuario, d.nombre AS departamento, q.asunto, q.fechacreacion, e.nombre AS estado
+FROM quejas q
+INNER JOIN estados e ON q.idestado = e.idestado
+INNER JOIN usuarios u ON q.idusuario = u.idusuario
+INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+ORDER BY q.fechacreacion DESC
+LIMIT 5;
+
+SELECT numeros.dia AS dia, 
+    COALESCE(COUNT(CASE WHEN quejas.idestado = 1 THEN quejas.idqueja END), 0) AS totalpendientes,
+    COALESCE(COUNT(CASE WHEN quejas.idestado = 2 THEN quejas.idqueja END), 0) AS totalatendidas,
+    COALESCE(COUNT(CASE WHEN quejas.idestado = 3 THEN quejas.idqueja END), 0) AS totalrechazadas
 FROM (
-  SELECT DAY(DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL (tens.n * 10 + ones.n - 1) DAY)) AS dia
-  FROM
-    (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) ones,
-    (SELECT 0 AS n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9) tens
-  WHERE DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL (tens.n * 10 + ones.n - 1) DAY) <= LAST_DAY(NOW())
-) AS dates
-LEFT JOIN (
-  SELECT DAY(fechacreacion) AS dia, COUNT(*) AS total
-  FROM quejas
-  WHERE fechacreacion BETWEEN DATE_FORMAT(NOW(),'%Y-%m-01') AND DATE_FORMAT(LAST_DAY(NOW()),'%Y-%m-%d')
-  AND idestado = $idestado
-  GROUP BY dia
-) AS quejas ON dates.dia = quejas.dia
-ORDER BY dates.dia;
+  SELECT 1 AS dia UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION
+  SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12 UNION
+  SELECT 13 UNION SELECT 14 UNION SELECT 15 UNION SELECT 16 UNION SELECT 17 UNION SELECT 18 UNION
+  SELECT 19 UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23 UNION SELECT 24 UNION
+  SELECT 25 UNION SELECT 26 UNION SELECT 27 UNION SELECT 28 UNION SELECT 29 UNION SELECT 30 UNION
+  SELECT 31
+) AS numeros
+LEFT JOIN quejas ON DAY(quejas.fechacreacion) = numeros.dia
+WHERE numeros.dia <= DAY(LAST_DAY(NOW()))
+GROUP BY numeros.dia;
+
+SELECT * 
+FROM usuarios u
+INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+WHERE usuario = 'admin';
+
+
+SELECT u.idusuario, CONCAT(u.nombre, ' ', u.apellido) AS nombre, u.usuario, u.password, u.email, u.estado, d.nombre AS departamento, r.rol AS rol, u.idrol
+FROM usuarios u
+INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+INNER JOIN roles r ON u.idrol = r.idrol
+WHERE usuario = 'admin';
+
+SELECT * FROM categorias 
+WHERE estado = 1;
+
+SELECT * FROM turnos WHERE estado = 1;
+
+
