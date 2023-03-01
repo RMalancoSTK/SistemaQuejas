@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="<?= BASE_URL; ?>public/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="<?= BASE_URL; ?>public/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="<?= BASE_URL; ?>public/plugins/toastr/toastr.min.css">
+    <script type="text/javascript">
+        var BASE_URL = "<?php echo BASE_URL; ?>";
+    </script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

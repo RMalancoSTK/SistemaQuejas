@@ -1,5 +1,3 @@
-BASE_URL = "http://localhost:8080/SistemaQuejas/";
-
 if (document.getElementById("quejasChart")) {
   $.ajax({
     url: BASE_URL + "dashboard/obtenerquejas",

@@ -1,20 +1,6 @@
 $(function () {
-  $.ajax({
-    url: "api/obtenerbaseurl",
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-      var base_url = data.base_url;
-      localStorage.setItem("base_url", base_url);
-    },
-  });
-});
-
-$(function () {
   bsCustomFileInput.init();
-});
 
-$(function () {
   $("#example1")
     .DataTable({
       responsive: true,
@@ -165,4 +151,56 @@ $(function () {
     .buttons()
     .container()
     .appendTo("#example1_wrapper .col-md-6:eq(0)");
+
+  var idusuario = document.getElementById("idusuario").value;
+
+  const acciones = (data, type, row) => {
+    if (row.estado == 1) {
+      return `
+      <div class="btn-group" role="group" aria-label="Basic example">
+            <button class="btn btn-warning btn-sm mr-2" type="button" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario" onclick="btnEditarUsuario(${row.idusuario})"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-warning btn-sm mr-2" type="button" data-bs-toggle="modal" data-bs-target="#modalCambiarPassword" onclick="btnCambiarPassword(${row.idusuario})"><i class="fas fa-key"></i></button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" onclick="btnDesactivarUsuario(${row.idusuario})"><i class="fas fa-times"></i></button>
+      </div>
+      `;
+    } else {
+      return `
+      <div class="btn-group" role="group" aria-label="Basic example">
+            <button class="btn btn-primary btn-sm mr-2" type="button" onclick="btnActivarUsuario(${row.idusuario})"><i class="fas fa-check"></i></button>
+            <button class="btn btn-danger btn-sm mr-2" type="button" onclick="btnEliminarUsuario(${row.idusuario})"><i class="fas fa-trash"></i></button>
+      </div>
+      `;
+    }
+  };
+
+  const estado = (data, type, row) => {
+    if (row.estado == 1) {
+      return `<span class="badge bg-success text-white">Activo</span>`;
+    } else {
+      return `<span class="badge bg-danger text-white">Inactivo</span>`;
+    }
+  };
+
+  $("#tableMisQuejas").DataTable({
+    ajax: {
+      url: BASE_URL + "MisQuejas/getMisQuejas",
+      type: "POST",
+      data: { idusuario: idusuario },
+    },
+    columns: [
+      { data: "usuario" },
+      { data: "nombre" },
+      { data: "correo" },
+      { data: "rol" },
+      { data: "estado", render: estado },
+      { data: "acciones", render: acciones },
+    ],
+    paging: true,
+    lengthChange: false,
+    searching: false,
+    ordering: true,
+    info: true,
+    autoWidth: false,
+    responsive: true,
+  });
 });

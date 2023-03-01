@@ -3,6 +3,15 @@
 require_once 'models/QuejasModel.php';
 class Utils
 {
+    public static function deleteSession($name)
+    {
+        if (isset($_SESSION[$name])) {
+            $_SESSION[$name] = null;
+            unset($_SESSION[$name]);
+        }
+        return $name;
+    }
+
     public static function comprobarSesion()
     {
         if (!isset($_SESSION['active'])) {
@@ -30,7 +39,7 @@ class Utils
             echo '<script>$(function () {
                 toastr.' . $type . '("' . $_SESSION[$type] . '");
               });</script>';
-            unset($_SESSION[$type]);
+            self::deleteSession($type);
         }
     }
 

@@ -16,7 +16,6 @@
 <script src="<?= BASE_URL; ?>public/plugins/jquery-knob/jquery.knob.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/moment/moment.min.js"></script>
 <script src="<?= BASE_URL; ?>public/js/adminlte.js"></script>
-
 <script src="<?= BASE_URL; ?>public/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
