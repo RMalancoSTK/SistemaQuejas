@@ -88,7 +88,7 @@
                                 <tbody>
                                     <?php foreach ($this->getUltimasQuejasUsuario($_SESSION['idusuario']) as $queja) : ?>
                                         <tr>
-                                            <td><a href="<?= BASE_URL ?>quejas/editar/<?= $queja->idqueja ?>"><?= $queja->idqueja ?></a></td>
+                                            <td><a href="<?= BASE_URL ?>quejas/ver&idqueja=<?= $queja->idqueja ?>"><?= $queja->idqueja ?></a></td>
                                             <td><?= $queja->usuario ?></td>
                                             <td><?= $queja->departamento ?></td>
                                             <td><?= $queja->asunto ?></td>
