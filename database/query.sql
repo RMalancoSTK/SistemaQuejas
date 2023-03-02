@@ -72,6 +72,8 @@ CREATE TABLE IF NOT EXISTS quejas (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
+
+
 --crear la tabla de archivos
 CREATE TABLE archivos (
   idarchivo int(11) NOT NULL AUTO_INCREMENT,

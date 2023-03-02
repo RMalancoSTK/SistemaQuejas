@@ -61,17 +61,41 @@ class Utils
     }
     public static function setActive($path)
     {
-        $actual_path = $_SERVER['REQUEST_URI'];
-        if (strpos($actual_path, $path) !== false) {
+        $actualpath = $_SERVER['REQUEST_URI'];
+        if (strpos($actualpath, $path) !== false) {
             echo 'active';
         }
     }
 
     public static function setMenuOpen($path)
     {
-        $actual_path = $_SERVER['REQUEST_URI'];
-        if (strpos($actual_path, $path) !== false) {
+        $actualpath = $_SERVER['REQUEST_URI'];
+        if (strpos($actualpath, $path) !== false) {
             echo 'menu-open';
         }
+    }
+
+    public static function limpiarDatos($datos)
+    {
+        $datos = trim($datos);
+        $datos = stripslashes($datos);
+        $datos = htmlspecialchars($datos);
+        return $datos;
+    }
+
+    public static function redirect($location)
+    {
+        header($location);
+        exit();
+    }
+
+    public static function setSuccessMessage($message)
+    {
+        $_SESSION['success'] = $message;
+    }
+
+    public static function setErrorMessage($message)
+    {
+        $_SESSION['error'] = $message;
     }
 }

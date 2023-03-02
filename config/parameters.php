@@ -29,7 +29,7 @@ define("LOCATION_LOGIN", "Location: " . BASE_URL . "login/index"); // Redireccio
 define("LOCATION_DASHBOARD", "Location: " . BASE_URL . "dashboard/index"); // Redirecciona a la página de dashboard
 define("LOCATION_QUEJAS_CREAR", "Location: " . BASE_URL . "quejas/crear"); // Redirecciona a la página de crear quejas
 define("LOCATION_QUEJAS_MISQUEJAS", "Location: " . BASE_URL . "quejas/misquejas"); // Redirecciona a la página de mis quejas
-define("LOCATION_QUEJAS_EDITAR", "Location: " . BASE_URL . "quejas/editar/"); // Redirecciona a la página de editar quejas
+define("LOCATION_QUEJAS_EDITAR", "Location: " . BASE_URL . "quejas/editar"); // Redirecciona a la página de editar quejas
 define("LOCATION_QUEJAS", "Location: " . BASE_URL . "quejas/index"); // Redirecciona a la página de quejas
 
 // MENSAJES DE ERRORES Y EXITOS

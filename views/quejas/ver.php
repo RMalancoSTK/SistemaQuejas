@@ -110,24 +110,8 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="estado">Estado</label>
-                                            <select name="estado" id="estado" class="form-control" required>
-                                                <?php foreach ($this->getEstados() as $estado) : ?>
-                                                    <?php if (isset($this->queja) && is_object($this->queja) && $this->queja->estado == $estado->idestado) : ?>
-                                                        <option value="<?= $estado->idestado; ?>" selected><?= $estado->nombre; ?></option>
-                                                    <?php else : ?>
-                                                        <option value="<?= $estado->idestado; ?>"><?= $estado->nombre; ?></option>
-                                                    <?php endif; ?>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <a href="<?= base_url ?>queja/atender&id=<?= $this->queja->idqueja; ?>" class="btn btn-success btn-block">Atender</a>
-                                            <a href="<?= base_url ?>queja/rechazar&id=<?= $this->queja->idqueja; ?>" class="btn btn-danger btn-block">Rechazar</a>
+                                            <a href="<?= BASE_URL ?>queja/atender&id=<?= $this->queja->idqueja; ?>" class="btn btn-success btn-block">Atender</a>
+                                            <a href="<?= BASE_URL ?>queja/rechazar&id=<?= $this->queja->idqueja; ?>" class="btn btn-danger btn-block">Rechazar</a>
                                         </div>
                                     </div>
                                 </div>

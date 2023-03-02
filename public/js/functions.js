@@ -14,6 +14,7 @@ function tablademisquejas() {
     // los usuarios solo pueden editar las quejas que esten pendientes o eliminarlas, pero cuando esten atendidas o rechazadas no pueden hacer nada solo verlas
     if (row.Estado == "Pendiente") {
       return `
+    <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
     <a href="${BASE_URL}quejas/editar&idqueja=${row.Id}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
     <button class="btn btn-danger btn-sm" onclick="eliminarQueja(${row.Id})"><i class="fas fa-trash"></i></button>
     `;
