@@ -375,3 +375,13 @@ SELECT u.idusuario, u.usuario, u.nombre, u.email as correo, r.rol AS rol, u.esta
         FROM usuarios u
         INNER JOIN roles r ON u.idrol = r.idrol
         WHERE u.idusuario <> 1;
+
+        SELECT q.idqueja, q.idusuario, q.idestado, q.idcategoria, q.idturno, q.asunto, q.descripcion, q.fechacreacion, q.fechaactualizacion, q.estado,
+        u.nombre AS usuario, d.nombre AS departamento, c.nombre AS categoria, t.nombre AS turno, e.nombre AS estado, CONCAT(u.nombre, ' ', u.apellido) AS nombrecompleto
+        FROM quejas q
+        INNER JOIN usuarios u ON q.idusuario = u.idusuario
+        INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+        INNER JOIN categorias c ON q.idcategoria = c.idcategoria
+        INNER JOIN turnos t ON q.idturno = t.idturno
+        INNER JOIN estados e ON q.idestado = e.idestado
+        WHERE q.idqueja = 18;

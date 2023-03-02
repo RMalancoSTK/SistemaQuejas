@@ -74,7 +74,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table m-0">
+                            <table class="table m-0" id="tabladashboarduser" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>ID Queja</th>

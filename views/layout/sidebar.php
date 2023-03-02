@@ -41,12 +41,14 @@
                                 <p>Mis quejas</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="<?= BASE_URL; ?>quejas/index" class="nav-link <?= Utils::setActive('quejas/index'); ?>">
-                                <i class="fas fa-list nav-icon"></i>
-                                <p>Lista de quejas</p>
-                            </a>
-                        </li>
+                        <?php if (isset($_SESSION['idrol']) && $_SESSION['idrol'] == 1) : ?>
+                            <li class="nav-item">
+                                <a href="<?= BASE_URL; ?>quejas/index" class="nav-link <?= Utils::setActive('quejas/index'); ?>">
+                                    <i class="fas fa-list nav-icon"></i>
+                                    <p>Lista de quejas</p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </li>
                 <li class="nav-item has-treeview <?= Utils::setMenuOpen('usuarios'); ?>">

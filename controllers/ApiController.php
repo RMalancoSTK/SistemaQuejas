@@ -50,4 +50,16 @@ class ApiController
         echo json_encode($arreglo);
         die();
     }
+
+    public function eliminarQueja()
+    {
+        $idqueja = $_POST['idqueja'];
+        $query = $this->apiModel->eliminarQueja($idqueja);
+        if ($query) {
+            echo json_encode(array('status' => 'ok', 'message' => 'Queja eliminada correctamente'));
+        } else {
+            echo json_encode(array('status' => 'error', 'message' => 'No se pudo eliminar la queja'));
+        }
+        die();
+    }
 }

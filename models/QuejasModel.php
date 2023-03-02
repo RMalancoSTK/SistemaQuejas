@@ -138,6 +138,12 @@ class QuejasModel
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function getEstados()
+    {
+        $query = $this->db->query("SELECT * FROM estados WHERE estado = 1;");
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function saveQueja($idusuario, $idestado, $idcategoria, $idturno, $asunto, $descripcion, $fechacreacion, $estado)
     {
         $query = $this->db->prepare("INSERT INTO `quejas` (idusuario, idestado, idcategoria, idturno, asunto, descripcion, fechacreacion, fechaactualizacion, estado) 
@@ -173,5 +179,31 @@ class QuejasModel
     public function lastInsertId()
     {
         return $this->db->lastInsertId();
+    }
+
+    public function getQueja($idqueja)
+    {
+        $query = $this->db->query("SELECT q.idqueja, q.idusuario, q.idestado, q.idcategoria, q.idturno, q.asunto, q.descripcion, q.fechacreacion, q.fechaactualizacion, q.estado,
+        u.nombre AS usuario, d.nombre AS departamento, c.nombre AS categoria, t.nombre AS turno, e.nombre AS estado, CONCAT(u.nombre, ' ', u.apellido) AS nombrecompleto
+        FROM quejas q
+        INNER JOIN usuarios u ON q.idusuario = u.idusuario
+        INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+        INNER JOIN categorias c ON q.idcategoria = c.idcategoria
+        INNER JOIN turnos t ON q.idturno = t.idturno
+        INNER JOIN estados e ON q.idestado = e.idestado
+        WHERE q.idqueja = $idqueja;");
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function updateQueja($idqueja, $idcategoria, $idturno, $asunto, $descripcion, $fechaactualizacion)
+    {
+        $query = $this->db->prepare("UPDATE quejas SET idcategoria = :idcategoria, idturno = :idturno, asunto = :asunto, descripcion = :descripcion, fechaactualizacion = :fechaactualizacion WHERE idqueja = :idqueja;");
+        $query->bindParam(":idqueja", $idqueja);
+        $query->bindParam(":idcategoria", $idcategoria);
+        $query->bindParam(":idturno", $idturno);
+        $query->bindParam(":asunto", $asunto);
+        $query->bindParam(":descripcion", $descripcion);
+        $query->bindParam(":fechaactualizacion", $fechaactualizacion);
+        return $query->execute();
     }
 }

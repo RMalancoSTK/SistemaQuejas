@@ -5,6 +5,8 @@ $(function () {
   bsCustomFileInput.init();
   tablademisquejas();
   tablaquejas();
+  tabladashboardadmin();
+  tabladashboarduser();
 });
 
 function tablademisquejas() {
@@ -13,7 +15,7 @@ function tablademisquejas() {
     if (row.Estado == "Pendiente") {
       return `
     <a href="${BASE_URL}quejas/editar&idqueja=${row.Id}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-    <a href="${BASE_URL}quejas/eliminar&idqueja=${row.Id}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+    <button class="btn btn-danger btn-sm" onclick="eliminarQueja(${row.Id})"><i class="fas fa-trash"></i></button>
     `;
     } else {
       return `
@@ -61,6 +63,30 @@ function tablademisquejas() {
         previous: "Anterior",
       },
     },
+  });
+}
+
+function tabladashboardadmin() {
+  $("#tabladashboardadmin").DataTable({
+    paging: false,
+    lengthChange: false,
+    searching: false,
+    ordering: false,
+    info: false,
+    autoWidth: false,
+    responsive: true,
+  });
+}
+
+function tabladashboarduser() {
+  $("#tabladashboarduser").DataTable({
+    paging: false,
+    lengthChange: false,
+    searching: false,
+    ordering: false,
+    info: false,
+    autoWidth: false,
+    responsive: true,
   });
 }
 
@@ -123,5 +149,35 @@ function tablaquejas() {
         previous: "Anterior",
       },
     },
+  });
+}
+
+function eliminarQueja(id) {
+  Swal.fire({
+    title: "¿Estás seguro?",
+    text: "¡No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    // confirm Button color en color verde
+    confirmButtonColor: "#28a745",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "¡Sí, bórralo!",
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        url: BASE_URL + "api/eliminarQueja",
+        type: "POST",
+        data: { idqueja: id },
+        success: function (response) {
+          var data = JSON.parse(response);
+          if (data.status == "ok") {
+            Swal.fire("¡Eliminado!", "La queja ha sido eliminada.", "success");
+            $("#tablademisquejas").DataTable().ajax.reload();
+          } else {
+            Swal.fire("¡Error!", "La queja no ha sido eliminada.", "error");
+          }
+        },
+      });
+    }
   });
 }

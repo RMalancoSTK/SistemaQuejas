@@ -39,4 +39,9 @@ class ApiModel
         INNER JOIN roles r ON u.idrol = r.idrol
         WHERE u.idusuario <> $idusuario;");
     }
+
+    public function eliminarQueja($idqueja)
+    {
+        return $this->db->query("DELETE FROM quejas WHERE idqueja = $idqueja");
+    }
 }
