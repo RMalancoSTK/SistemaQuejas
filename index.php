@@ -28,6 +28,7 @@ if (isset($_GET['controller'])) {
     exit();
 }
 
+
 // comprobar si existe el método
 if (class_exists($nombre_controlador)) {
     $controlador = new $nombre_controlador();

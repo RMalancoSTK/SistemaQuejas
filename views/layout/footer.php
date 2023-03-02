@@ -21,6 +21,8 @@
 <script src="<?= BASE_URL; ?>public/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/summernote/summernote-bs4.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+<!-- DataTables  & Plugins -->
 <script src="<?= BASE_URL; ?>public/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -33,6 +35,7 @@
 <script src="<?= BASE_URL; ?>public/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
 <script src="<?= BASE_URL; ?>public/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script src="<?= BASE_URL; ?>public/plugins/toastr/toastr.min.js"></script>
 <script src="<?= BASE_URL; ?>public/js/functions.js"></script>

@@ -4,6 +4,7 @@ require_once 'models/QuejasModel.php';
 class QuejasController
 {
     private $quejasModel;
+    private $idqueja;
 
     public function __construct()
     {
@@ -31,8 +32,12 @@ class QuejasController
 
     public function crear()
     {
-        // Utils::isUser();
         $this->loadView('crear');
+    }
+    // editar recibe el id de la queja por metodo GET
+    public function editar()
+    {
+        var_dump($_GET);
     }
 
     public function misquejas()
