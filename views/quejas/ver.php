@@ -3,6 +3,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0">Vista de Queja, Reclamo o Sugerencia</h1>
+                <input type="hidden" name="idqueja" id="idqueja" value="<?= $this->queja->idqueja; ?>">
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -15,7 +16,7 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Asunto: <?= $this->queja->asunto; ?></h3>
@@ -74,29 +75,51 @@
                         </form>
                     </div>
                 </div>
+            </div>
 
+        </div>
+        <div class="row">
+            <div class="col-md-8">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Comentarios</h3>
+                        <span class="float-right" id="contadorComentarios"></span>
                     </div>
-                    <div class="card-body">
-                        Start creating your amazing application!
+                    <div class="card-body card-comments" id="comentarios">
                     </div>
                     <div class="card-footer">
-                        Footer
+                        <form action="#" method="post" id="formComentario">
+                            <div class="form-group">
+                                <textarea name="comentario" class="form-control form-control-sm" placeholder="Escriba un comentario..." id="comentario" rows="2" required></textarea>
+                            </div>
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm" onclick="comentar(event)">Comentar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-4">
+
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Archivos Adjuntos</h3>
                     </div>
-                    <div class="card-body">
-                        Start creating your amazing application!
+                    <div class="card-body" id="archivos">
                     </div>
                     <div class="card-footer">
-                        Footer
+                        <form action="#" method="post" id="formArchivo">
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="archivo" name="archivo" required>
+                                    <label class="custom-file-label" for="archivo">Seleccionar Archivo</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary btn-sm" onclick="subirArchivo(event)">Subir</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -108,10 +131,14 @@
                         <div class="card-body">
                             <form>
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
-                                            <a href="<?= BASE_URL ?>queja/atender&id=<?= $this->queja->idqueja; ?>" class="btn btn-success btn-block">Atender</a>
-                                            <a href="<?= BASE_URL ?>queja/rechazar&id=<?= $this->queja->idqueja; ?>" class="btn btn-danger btn-block">Rechazar</a>
+                                            <a href="<?= BASE_URL ?>quejas/atender&idqueja=<?= $this->queja->idqueja; ?>" class="btn btn-success btn-block">Atender</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <a href="<?= BASE_URL ?>quejas/rechazar&idqueja=<?= $this->queja->idqueja; ?>" class="btn btn-danger btn-block">Rechazar</a>
                                         </div>
                                     </div>
                                 </div>

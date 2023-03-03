@@ -42,6 +42,7 @@
 <script src="<?= BASE_URL; ?>public/js/dashboard.js"></script>
 
 <?php Utils::showMessages('success'); ?>
+<?php Utils::showMessages('error'); ?>
 
 </body>
 

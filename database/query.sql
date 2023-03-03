@@ -166,8 +166,8 @@ INSERT INTO `quejas` ( `idusuario`, `idcategoria`, `idturno`, `idestado`, `asunt
 -- creamos la tabla de comentarios
 
 -- insertamos un comentario
-INSERT INTO `comentarios` (`idqueja`, `idusuario`, `comentario`, `fechacreacion`, `fechaactualizacion`, `estado`) VALUES
-(17, 1, 'Comentario 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
+INSERT INTO comentarios (idqueja, idusuario, comentario, fechacreacion, fechaactualizacion, estado) 
+VALUES (1, 1, 'Comentario 1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1);
 
 -- insertamos departamentos
 INSERT INTO `departamentos` (`iddepartamento`, `nombre`, `descripcion`) VALUES
@@ -387,3 +387,34 @@ SELECT u.idusuario, u.usuario, u.nombre, u.email as correo, r.rol AS rol, u.esta
         INNER JOIN turnos t ON q.idturno = t.idturno
         INNER JOIN estados e ON q.idestado = e.idestado
         WHERE q.idqueja = 18;
+
+SELECT c.idcomentario, c.comentario, 
+       CONCAT(DATE_FORMAT(c.fechacreacion, '%h:%i %p'), ' ', 
+              IF(DATE(c.fechacreacion) = DATE(NOW()), 'Hoy', DATE_FORMAT(c.fechacreacion, '%d %b %Y'))) AS Fecha,
+       CONCAT(u.nombre, ' ', u.apellido) AS 'Quien Comenta'
+FROM comentarios c
+INNER JOIN usuarios u ON c.idusuario = u.idusuario
+WHERE c.idqueja = 55
+ORDER BY c.fechacreacion DESC;
+
+SELECT COUNT(*) AS total
+FROM comentarios c
+INNER JOIN usuarios u ON c.idusuario = u.idusuario
+WHERE c.idqueja = 55
+ORDER BY c.fechacreacion DESC;
+
+SELECT a.idarchivo, a.nombrearchivo, a.ruta, a.tipoarchivo, a.estado
+        FROM archivos a
+        WHERE a.idqueja = 55;
+
+-- borrar duplicados en la tabla archivos
+DELETE a1 FROM archivos a1, archivos a2
+WHERE a1.idarchivo < a2.idarchivo AND a1.nombrearchivo = a2.nombrearchivo;
+
+INSERT INTO `archivos` (idqueja, nombrearchivo, tipoarchivo, tamanoarchivo, ruta, fechacreacion, fechaactualizacion, estado) 
+VALUES (55, 'archivo1.jpg', 'image/jpeg', 12345, 'uploads/quejas/55/archivo1.jpg', NOW(), NOW(), 1);
+
+-- alterar el query anterior si el archivo ya existe en el idqueja no se inserta
+INSERT INTO `archivos` (idqueja, nombrearchivo, tipoarchivo, tamanoarchivo, ruta, fechacreacion, fechaactualizacion, estado)
+SELECT 55, 'archivo1.jpg', 'image/jpeg', 12345, 'uploads/quejas/55/archivo1.jpg', NOW(), NOW(), 1
+WHERE NOT EXISTS (SELECT * FROM archivos WHERE idqueja = 55 AND nombrearchivo = 'archivo1.jpg');

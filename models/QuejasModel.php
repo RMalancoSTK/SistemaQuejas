@@ -158,13 +158,14 @@ class QuejasModel
         $query->bindParam(":fechaactualizacion", $fechacreacion);
         $query->bindParam(":estado", $estado);
         $query->execute();
-        return $query->rowCount();
+        return $this->db->lastInsertId();
     }
 
     public function saveArchivo($idqueja, $nombrearchivo, $tipoarchivo, $tamanoarchivo, $ruta, $fechacreacion, $estado)
     {
-        $query = $this->db->prepare("INSERT INTO `archivos` (idqueja, nombrearchivo, tipoarchivo, tamanoarchivo, ruta, fechacreacion, fechaactualizacion, estado) 
-        VALUES ( :idqueja, :nombrearchivo, :tipoarchivo, :tamanoarchivo, :ruta, :fechacreacion, :fechaactualizacion, :estado);");
+        $query = $this->db->prepare("INSERT INTO `archivos` (idqueja, nombrearchivo, tipoarchivo, tamanoarchivo, ruta, fechacreacion, fechaactualizacion, estado)
+        SELECT :idqueja, :nombrearchivo, :tipoarchivo, :tamanoarchivo, :ruta, :fechacreacion, :fechaactualizacion, :estado
+        WHERE NOT EXISTS (SELECT * FROM archivos WHERE idqueja = :idqueja AND nombrearchivo = :nombrearchivo);");
         $query->bindParam(":idqueja", $idqueja);
         $query->bindParam(":nombrearchivo", $nombrearchivo);
         $query->bindParam(":tipoarchivo", $tipoarchivo);
@@ -207,11 +208,11 @@ class QuejasModel
         return $query->execute();
     }
 
-    public function atenderQueja($idqueja, $fechaatencion, $idestado)
+    public function atenderQueja($idqueja, $fechaactualizacion, $idestado)
     {
-        $query = $this->db->prepare("UPDATE quejas SET fechaatencion = :fechaatencion, idestado = :idestado WHERE idqueja = :idqueja;");
+        $query = $this->db->prepare("UPDATE quejas SET fechaactualizacion = :fechaactualizacion, idestado = :idestado WHERE idqueja = :idqueja;");
         $query->bindParam(":idqueja", $idqueja);
-        $query->bindParam(":fechaatencion", $fechaatencion);
+        $query->bindParam(":fechaactualizacion", $fechaactualizacion);
         $query->bindParam(":idestado", $idestado);
         return $query->execute();
     }

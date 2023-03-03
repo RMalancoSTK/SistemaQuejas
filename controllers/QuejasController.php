@@ -7,6 +7,12 @@ class QuejasController
     private $idqueja;
     private $queja;
 
+    private $categoria;
+    private $turno;
+    private $asunto;
+    private $descripcion;
+    private $archivo;
+
     public function __construct()
     {
         $this->quejasModel = new QuejasModel();
@@ -75,6 +81,8 @@ class QuejasController
         }
     }
 
+
+
     public function getCategorias()
     {
         $categorias = $this->quejasModel->getCategorias();
@@ -105,78 +113,168 @@ class QuejasController
     public function save()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            Utils::redirect(LOCATION_QUEJAS_CREAR);
+            return;
+        }
 
-            if (
-                !isset($_POST['idcategoria'], $_POST['idturno'], $_POST['asunto'], $_POST['descripcion'])
-            ) {
-                Utils::setErrorMessage('Todos los campos son obligatorios');
+        $this->validateAndSaveQueja();
+
+        // if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        //     if (
+        //         !isset($_POST['idcategoria'], $_POST['idturno'], $_POST['asunto'], $_POST['descripcion'])
+        //     ) {
+        //         Utils::setErrorMessage('Todos los campos son obligatorios');
+        //         Utils::redirect(LOCATION_QUEJAS_CREAR);
+        //         exit();
+        //     }
+
+        //     $idusuario = $_SESSION['idusuario'];
+        //     $idestado = 1;
+        //     $idcategoria = Utils::limpiarDatos($_POST['idcategoria']);
+        //     $idturno = Utils::limpiarDatos($_POST['idturno']);
+        //     $asunto = Utils::limpiarDatos($_POST['asunto']);
+        //     $descripcion = Utils::limpiarDatos($_POST['descripcion']);
+        //     $fechacreacion = Utils::limpiarDatos($_POST['fechacreacion']);
+        //     $estado = 1;
+
+        //     if (isset($_GET['idqueja'])) {
+        //         $idqueja = Utils::limpiarDatos($_GET['idqueja']);
+        //         $fechaactualizacion = date('Y-m-d H:i:s');
+        //         $queja = $this->quejasModel->updateQueja($idqueja, $idcategoria, $idturno, $asunto, $descripcion, $fechaactualizacion);
+        //         if ($queja) {
+        //             Utils::setSuccessMessage('Queja actualizada correctamente');
+        //             Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
+        //             exit();
+        //         } else {
+        //             Utils::setErrorMessage('No se pudo actualizar la queja');
+        //             Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
+        //             exit();
+        //         }
+        //     } else {
+        //         $queja = $this->quejasModel->saveQueja($idusuario, $idestado, $idcategoria, $idturno, $asunto, $descripcion, $fechacreacion, $estado);
+        //         if ($queja) {
+        //             if (isset($_FILES["archivo"]) && $_FILES["archivo"]["error"] == 0) {
+        //                 $idqueja = $this->quejasModel->lastInsertId();
+        //                 $nombrearchivo = $_FILES["archivo"]["name"];
+        //                 $tipoarchivo = $_FILES["archivo"]["type"];
+        //                 $tamanoarchivo = $_FILES["archivo"]["size"];
+        //                 $temparchivo = $_FILES["archivo"]["tmp_name"];
+
+        //                 if ($tamanoarchivo > 2000000) {
+        //                     Utils::setErrorMessage('El archivo no debe pesar mas de 2MB');
+        //                     Utils::redirect(LOCATION_QUEJAS_EDITAR . '&idqueja=' . $idqueja);
+        //                     exit();
+        //                 }
+
+        //                 $carpeta = "uploads/$idqueja"; // Carpeta donde se guardará el archivo
+
+        //                 if (!file_exists($carpeta)) {
+        //                     mkdir($carpeta, 0777, true);
+        //                 }
+
+        //                 $ruta = $carpeta . '/' . $nombrearchivo;
+        //                 move_uploaded_file($temparchivo, $ruta);
+
+        //                 $this->quejasModel->saveArchivo($idqueja, $nombrearchivo, $tipoarchivo, $tamanoarchivo, $ruta, $fechacreacion, $estado);
+        //                 Utils::setSuccessMessage('Queja registrada correctamente');
+        //                 Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
+        //                 exit();
+        //             } else {
+        //                 Utils::setSuccessMessage('Queja registrada correctamente');
+        //                 Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
+        //                 exit();
+        //             }
+        //         } else {
+        //             Utils::setErrorMessage('No se pudo registrar la queja');
+        //             Utils::redirect(LOCATION_QUEJAS_CREAR);
+        //         }
+        //     }
+        // } else {
+        //     Utils::redirect(LOCATION_QUEJAS_CREAR);
+        // }
+    }
+
+    private function validateAndSaveQueja()
+    {
+        $requiredFields = [
+            'idcategoria' => 'Categoria',
+            'idturno' => 'Turno',
+            'asunto' => 'Asunto',
+            'descripcion' => 'Descripcion',
+        ];
+
+        $missingFields = array_filter($requiredFields, function ($field) {
+            return !isset($_POST[$field]);
+        });
+
+        if (!empty($missingFields)) {
+            $missingFields = array_map(function ($field) use ($requiredFields) {
+                return $requiredFields[$field];
+            }, array_keys($missingFields));
+
+            Utils::setErrorMessage('Los siguientes campos son obligatorios: ' . implode(', ', $missingFields));
+            Utils::redirect(LOCATION_QUEJAS_CREAR);
+            exit();
+        }
+
+        $idusuario = $_SESSION['idusuario'];
+        $idestado = 1;
+        $idcategoria = Utils::limpiarDatos($_POST['idcategoria']);
+        $idturno = Utils::limpiarDatos($_POST['idturno']);
+        $asunto = Utils::limpiarDatos($_POST['asunto']);
+        $descripcion = Utils::limpiarDatos($_POST['descripcion']);
+        $fechacreacion = Utils::limpiarDatos($_POST['fechacreacion']);
+        $estado = 1;
+
+        if (isset($_GET['idqueja'])) {
+            $idqueja = Utils::limpiarDatos($_GET['idqueja']);
+            $fechaactualizacion = date('Y-m-d H:i:s');
+            $queja = $this->quejasModel->updateQueja($idqueja, $idcategoria, $idturno, $asunto, $descripcion, $fechaactualizacion);
+            $queja ? Utils::setSuccessMessage('Queja actualizada correctamente') : Utils::setErrorMessage('No se pudo actualizar la queja');
+        } else {
+            $queja = $this->quejasModel->saveQueja($idusuario, $idestado, $idcategoria, $idturno, $asunto, $descripcion, $fechacreacion, $estado);
+
+            if (!$queja) {
+                Utils::setErrorMessage('No se pudo registrar la queja');
                 Utils::redirect(LOCATION_QUEJAS_CREAR);
+            }
+
+            $this->saveArchivo($queja, $fechacreacion, $estado);
+
+            Utils::setSuccessMessage('Queja registrada correctamente');
+            Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
+        }
+
+        Utils::setSuccessMessage('Queja registrada correctamente');
+        Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
+    }
+
+    private function saveArchivo($queja, $fechacreacion, $estado)
+    {
+        if (isset($_FILES["archivo"]) && $_FILES["archivo"]["error"] == 0) {
+            $idqueja = $queja;
+            $nombrearchivo = $_FILES["archivo"]["name"];
+            $tipoarchivo = $_FILES["archivo"]["type"];
+            $tamanoarchivo = $_FILES["archivo"]["size"];
+            $temparchivo = $_FILES["archivo"]["tmp_name"];
+
+            if ($tamanoarchivo > 2000000) {
+                Utils::setErrorMessage('El archivo no debe pesar mas de 2MB');
+                Utils::redirect(LOCATION_QUEJAS_EDITAR . '&idqueja=' . $idqueja);
                 exit();
             }
 
-            $idusuario = $_SESSION['idusuario'];
-            $idestado = 1;
-            $idcategoria = Utils::limpiarDatos($_POST['idcategoria']);
-            $idturno = Utils::limpiarDatos($_POST['idturno']);
-            $asunto = Utils::limpiarDatos($_POST['asunto']);
-            $descripcion = Utils::limpiarDatos($_POST['descripcion']);
-            $fechacreacion = Utils::limpiarDatos($_POST['fechacreacion']);
-            $estado = 1;
+            $carpeta = "uploads/$idqueja"; // Carpeta donde se guardará el archivo
 
-            if (isset($_GET['idqueja'])) {
-                $idqueja = Utils::limpiarDatos($_GET['idqueja']);
-                $fechaactualizacion = date('Y-m-d H:i:s');
-                $queja = $this->quejasModel->updateQueja($idqueja, $idcategoria, $idturno, $asunto, $descripcion, $fechaactualizacion);
-                if ($queja) {
-                    Utils::setSuccessMessage('Queja actualizada correctamente');
-                    Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
-                    exit();
-                } else {
-                    Utils::setErrorMessage('No se pudo actualizar la queja');
-                    Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
-                    exit();
-                }
-            } else {
-                $queja = $this->quejasModel->saveQueja($idusuario, $idestado, $idcategoria, $idturno, $asunto, $descripcion, $fechacreacion, $estado);
-                if ($queja) {
-                    if (isset($_FILES["archivo"]) && $_FILES["archivo"]["error"] == 0) {
-                        $idqueja = $this->quejasModel->lastInsertId();
-                        $nombrearchivo = $_FILES["archivo"]["name"];
-                        $tipoarchivo = $_FILES["archivo"]["type"];
-                        $tamanoarchivo = $_FILES["archivo"]["size"];
-                        $temparchivo = $_FILES["archivo"]["tmp_name"];
-
-                        if ($tamanoarchivo > 2000000) {
-                            Utils::setErrorMessage('El archivo no debe pesar mas de 2MB');
-                            Utils::redirect(LOCATION_QUEJAS_EDITAR . '&idqueja=' . $idqueja);
-                            exit();
-                        }
-
-                        $carpeta = "uploads/$idqueja"; // Carpeta donde se guardará el archivo
-
-                        if (!file_exists($carpeta)) {
-                            mkdir($carpeta, 0777, true);
-                        }
-
-                        $ruta = $carpeta . '/' . $nombrearchivo;
-                        move_uploaded_file($temparchivo, $ruta);
-
-                        $this->quejasModel->saveArchivo($idqueja, $nombrearchivo, $tipoarchivo, $tamanoarchivo, $ruta, $fechacreacion, $estado);
-                        Utils::setSuccessMessage('Queja registrada correctamente');
-                        Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
-                        exit();
-                    } else {
-                        Utils::setSuccessMessage('Queja registrada correctamente');
-                        Utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
-                        exit();
-                    }
-                } else {
-                    Utils::setErrorMessage('No se pudo registrar la queja');
-                    Utils::redirect(LOCATION_QUEJAS_CREAR);
-                }
+            if (!file_exists($carpeta)) {
+                mkdir($carpeta, 0777, true);
             }
-        } else {
-            Utils::redirect(LOCATION_QUEJAS_CREAR);
+
+            $ruta = $carpeta . '/' . $nombrearchivo;
+            move_uploaded_file($temparchivo, $ruta);
+
+            $this->quejasModel->saveArchivo($idqueja, $nombrearchivo, $tipoarchivo, $tamanoarchivo, $ruta, $fechacreacion, $estado);
         }
     }
 
@@ -189,14 +287,25 @@ class QuejasController
         }
     }
 
+    public function rechazar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $this->rechazarQueja();
+        } else {
+            Utils::redirect(LOCATION_QUEJAS);
+        }
+    }
+
     private function atenderQueja()
     {
         if (isset($_GET['idqueja'])) {
             $idqueja = Utils::limpiarDatos($_GET['idqueja']);
             $queja = $this->quejasModel->getQueja($idqueja);
+            $idestado = 2; // Atendida
+            $message = 'Queja atendida correctamente';
             if ($queja) {
-                if ($_SESSION['idusuario'] == $queja->idusuario) {
-                    $this->atenderQuejaValida($idqueja);
+                if (isset($_SESSION['idrol']) && $_SESSION['idrol'] == 1) {
+                    $this->cambiarEstadoQueja($idqueja, $idestado, $message);
                 } else {
                     Utils::redirect(LOCATION_QUEJAS);
                 }
@@ -208,16 +317,36 @@ class QuejasController
         }
     }
 
-    private function atenderQuejaValida($idqueja)
+    private function rechazarQueja()
+    {
+        if (isset($_GET['idqueja'])) {
+            $idqueja = Utils::limpiarDatos($_GET['idqueja']);
+            $queja = $this->quejasModel->getQueja($idqueja);
+            $idestado = 3; // Rechazada
+            $message = 'Queja rechazada correctamente';
+            if ($queja) {
+                if (isset($_SESSION['idrol']) && $_SESSION['idrol'] == 1) {
+                    $this->cambiarEstadoQueja($idqueja, $idestado, $message);
+                } else {
+                    Utils::redirect(LOCATION_QUEJAS);
+                }
+            } else {
+                Utils::redirect(LOCATION_QUEJAS);
+            }
+        } else {
+            Utils::redirect(LOCATION_QUEJAS);
+        }
+    }
+
+    private function cambiarEstadoQueja($idqueja, $idestado, $message)
     {
         $fechaactualizacion = date('Y-m-d H:i:s');
-        $idestado = 2; // Atendido
         $queja = $this->quejasModel->atenderQueja($idqueja, $fechaactualizacion, $idestado);
         if ($queja) {
-            utils::setSuccessMessage('Queja atendida correctamente');
+            utils::setSuccessMessage($message);
         } else {
-            utils::setErrorMessage('No se pudo atender la queja');
+            utils::setErrorMessage('No se pudo actualizar la queja');
         }
-        utils::redirect(LOCATION_QUEJAS_MISQUEJAS);
+        utils::redirect(LOCATION_QUEJAS);
     }
 }

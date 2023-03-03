@@ -44,4 +44,38 @@ class ApiModel
     {
         return $this->db->query("DELETE FROM quejas WHERE idqueja = $idqueja");
     }
+
+    public function getComentarios($idqueja)
+    {
+        return $this->db->query("SELECT c.idcomentario, c.comentario,
+        CONCAT(DATE_FORMAT(c.fechacreacion, '%h:%i %p'), ' ',
+               IF(DATE(c.fechacreacion) = DATE(NOW()), 'Hoy', DATE_FORMAT(c.fechacreacion, '%d %b %Y'))) AS Fecha,
+        CONCAT(u.nombre, ' ', u.apellido) AS nombreusuario
+        FROM comentarios c
+        INNER JOIN usuarios u ON c.idusuario = u.idusuario
+        WHERE c.idqueja = $idqueja
+        ORDER BY c.fechacreacion DESC;");
+    }
+
+    public function contadorComentarios($idqueja)
+    {
+        return $this->db->query("SELECT COUNT(*) AS total
+        FROM comentarios c
+        INNER JOIN usuarios u ON c.idusuario = u.idusuario
+        WHERE c.idqueja = $idqueja
+        ORDER BY c.fechacreacion DESC;");
+    }
+
+    public function comentar($idqueja, $comentario, $idusuario, $fechacreacion)
+    {
+        return $this->db->query("INSERT INTO comentarios (idqueja, idusuario, comentario, fechacreacion, fechaactualizacion, estado) 
+        VALUES ($idqueja, $idusuario, '$comentario', '$fechacreacion', '$fechacreacion', 1);");
+    }
+
+    public function getArchivos($idqueja)
+    {
+        return $this->db->query("SELECT a.idarchivo, a.nombrearchivo, a.ruta, a.tipoarchivo, a.estado
+        FROM archivos a
+        WHERE a.idqueja = $idqueja;");
+    }
 }
