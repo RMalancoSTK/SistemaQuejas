@@ -98,4 +98,15 @@ class Utils
     {
         $_SESSION['error'] = $message;
     }
+
+    public static function validateFields($requiredFields, $method, $redirectLocation)
+    {
+        foreach ($requiredFields as $field) {
+            if (!isset($method[$field]) || empty($method[$field])) {
+                self::setErrorMessage('Todos los campos son obligatorios');
+                self::redirect($redirectLocation);
+                exit();
+            }
+        }
+    }
 }
