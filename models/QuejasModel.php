@@ -208,7 +208,7 @@ class QuejasModel
         return $query->execute();
     }
 
-    public function atenderQueja($idqueja, $fechaactualizacion, $idestado)
+    public function cambiarEstadoQueja($idqueja, $fechaactualizacion, $idestado)
     {
         $query = $this->db->prepare("UPDATE quejas SET fechaactualizacion = :fechaactualizacion, idestado = :idestado WHERE idqueja = :idqueja;");
         $query->bindParam(":idqueja", $idqueja);

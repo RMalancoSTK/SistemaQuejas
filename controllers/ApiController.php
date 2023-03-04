@@ -158,7 +158,7 @@ class ApiController
         $idqueja = $_POST['idqueja'];
         $estado = $_POST['estado'];
         $fechaactualizacion = date('Y-m-d H:i:s');
-        $query = $this->quejasModel->atenderQueja($idqueja, $fechaactualizacion, $estado);
+        $query = $this->quejasModel->cambiarEstadoQueja($idqueja, $fechaactualizacion, $estado);
         if ($query) {
             echo json_encode(array('status' => 'ok', 'message' => 'Queja atendida correctamente'));
         } else {
@@ -171,7 +171,7 @@ class ApiController
         $idqueja = $_POST['idqueja'];
         $estado = $_POST['estado'];
         $fechaactualizacion = date('Y-m-d H:i:s');
-        $query = $this->quejasModel->atenderQueja($idqueja, $fechaactualizacion, $estado);
+        $query = $this->quejasModel->cambiarEstadoQueja($idqueja, $fechaactualizacion, $estado);
         if ($query) {
             echo json_encode(array('status' => 'ok', 'message' => 'Queja rechazada correctamente'));
         } else {

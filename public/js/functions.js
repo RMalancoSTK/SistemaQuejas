@@ -12,6 +12,11 @@ $(function () {
   obtenerArchivos();
 });
 
+setInterval(function () {
+  obtenerComentarios();
+  contadorComentarios();
+}, 5000);
+
 function tablademisquejas() {
   const acciones = (data, type, row) => {
     // los usuarios solo pueden editar las quejas que esten pendientes o eliminarlas, pero cuando esten atendidas o rechazadas no pueden hacer nada solo verlas
