@@ -19,7 +19,6 @@ setInterval(function () {
 
 function tablademisquejas() {
   const acciones = (data, type, row) => {
-    // los usuarios solo pueden editar las quejas que esten pendientes o eliminarlas, pero cuando esten atendidas o rechazadas no pueden hacer nada solo verlas
     if (row.Estado == "Pendiente") {
       return `
     <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
@@ -124,49 +123,71 @@ function tablaquejas() {
     }
   };
 
-  $("#tablaquejas").DataTable({
-    paging: true,
-    lengthChange: true,
-    searching: true,
-    ordering: false,
-    info: true,
-    autoWidth: false,
-    responsive: true,
-    error: function (error) {
-      console.log(error);
-    },
-    ajax: {
-      url: BASE_URL + "api/getquejas",
-      dataSrc: "",
-    },
-    columns: [
-      { data: "Id" },
-      { data: "Fecha" },
-      { data: "Quien Registra" },
-      { data: "Asunto" },
-      { data: "Departamento" },
-      { data: "Tipo" },
-      { data: "Estado", render: spanestado },
-      {
-        data: null,
-        render: acciones,
+  // $("#tablaquejas").DataTable({
+  //   paging: true,
+  //   lengthChange: true,
+  //   searching: true,
+  //   ordering: false,
+  //   info: true,
+  //   autoWidth: false,
+  //   responsive: true,
+  //   ajax: {
+  //     url: BASE_URL + "api/getquejas",
+  //     dataSrc: "",
+  //   },
+  //   columns: [
+  //     { data: "Id" },
+  //     { data: "Fecha" },
+  //     { data: "Quien Registra" },
+  //     { data: "Asunto" },
+  //     { data: "Departamento" },
+  //     { data: "Tipo" },
+  //     { data: "Estado", render: spanestado },
+  //     {
+  //       data: null,
+  //       render: acciones,
+  //     },
+  //   ],
+  //   language: {
+  //     lengthMenu: "Mostrar _MENU_ registros por página",
+  //     zeroRecords: "No se encontraron registros",
+  //     info: "Mostrando página _PAGE_ de _PAGES_",
+  //     infoEmpty: "No hay registros disponibles",
+  //     infoFiltered: "(filtrado de _MAX_ registros totales)",
+  //     search: "Buscar:",
+  //     paginate: {
+  //       first: "Primero",
+  //       last: "Último",
+  //       next: "Siguiente",
+  //       previous: "Anterior",
+  //     },
+  //   },
+  // });
+
+  $("#tablaquejas")
+    .DataTable({
+      responsive: true,
+      lengthChange: false,
+      autoWidth: false,
+      buttons: ["csv", "pdf", "print"],
+      language: {
+        lengthMenu: "Mostrar _MENU_ registros por página",
+        zeroRecords: "No se encontraron registros",
+        info: "Mostrando página _PAGE_ de _PAGES_",
+        infoEmpty: "No hay registros disponibles",
+        infoFiltered: "(filtrado de _MAX_ registros totales)",
+        search: "Buscar:",
+        paginate: {
+          first: "Primero",
+          last: "Último",
+          next: "Siguiente",
+          previous: "Anterior",
+        },
       },
-    ],
-    language: {
-      lengthMenu: "Mostrar _MENU_ registros por página",
-      zeroRecords: "No se encontraron registros",
-      info: "Mostrando página _PAGE_ de _PAGES_",
-      infoEmpty: "No hay registros disponibles",
-      infoFiltered: "(filtrado de _MAX_ registros totales)",
-      search: "Buscar:",
-      paginate: {
-        first: "Primero",
-        last: "Último",
-        next: "Siguiente",
-        previous: "Anterior",
-      },
-    },
-  });
+    })
+    .buttons()
+    .container()
+    .appendTo("#tablaquejas_wrapper .col-md-6:eq(0)");
 }
 
 function eliminarQueja(id) {

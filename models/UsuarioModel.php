@@ -87,7 +87,6 @@ class UsuarioModel
 
     public function existeUsuario($usuario)
     {
-        // PDO Statement
         $sql = "SELECT
         u.idusuario,
         CONCAT(u.nombre, ' ', u.apellido) AS nombre,

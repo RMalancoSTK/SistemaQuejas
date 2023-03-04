@@ -21,7 +21,7 @@
                         <h3 class="card-title">Tabla de Quejas, Reclamos o Sugerencias de los Usuarios</h3>
                     </div>
                     <div class="card-body">
-                        <table id="tablaquejas" class="table table-bordered table-hover">
+                        <table id="tablaquejas" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>Id</th>
