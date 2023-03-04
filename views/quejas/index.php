@@ -35,6 +35,28 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php foreach ($this->getQuejas() as $queja) : ?>
+                                    <tr>
+                                        <td><?= $queja->Id; ?></td>
+                                        <td><?= $queja->Fecha; ?></td>
+                                        <td><?= $queja->Quien_Registra; ?></td>
+                                        <td><?= $queja->Asunto; ?></td>
+                                        <td><?= $queja->Departamento; ?></td>
+                                        <td><?= $queja->Tipo; ?></td>
+                                        <td>
+                                            <?php if ($queja->Estado == 'Pendiente') : ?>
+                                                <span class="badge badge-warning"><?= $queja->Estado; ?></span>
+                                            <?php elseif ($queja->Estado == 'Atendido') : ?>
+                                                <span class="badge badge-success"><?= $queja->Estado; ?></span>
+                                            <?php elseif ($queja->Estado == 'Rechazado') : ?>
+                                                <span class="badge badge-danger"><?= $queja->Estado; ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <a href="<?= BASE_URL ?>quejas/ver&idqueja=<?= $queja->Id; ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

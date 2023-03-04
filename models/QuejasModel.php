@@ -177,11 +177,6 @@ class QuejasModel
         return $query->execute();
     }
 
-    public function lastInsertId()
-    {
-        return $this->db->lastInsertId();
-    }
-
     public function getQueja($idqueja)
     {
         $query = $this->db->query("SELECT q.idqueja, q.idusuario, q.idestado, q.idcategoria, q.idturno, q.asunto, q.descripcion, q.fechacreacion, q.fechaactualizacion, q.estado,
@@ -215,5 +210,17 @@ class QuejasModel
         $query->bindParam(":fechaactualizacion", $fechaactualizacion);
         $query->bindParam(":idestado", $idestado);
         return $query->execute();
+    }
+
+    public function getQuejas()
+    {
+        $query = $this->db->query("SELECT q.idqueja AS Id, DATE_FORMAT(q.fechacreacion, '%d/%m/%Y') AS Fecha, CONCAT(u.nombre, ' ', u.apellido) AS Quien_Registra,q.asunto as Asunto, d.nombre AS Departamento, c.nombre AS Tipo, e.nombre AS Estado, q.estado AS EstadoId
+        FROM quejas q
+        INNER JOIN usuarios u ON q.idusuario = u.idusuario
+        INNER JOIN categorias c ON q.idcategoria = c.idcategoria
+        INNER JOIN estados e ON q.idestado = e.idestado
+        INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+        ORDER BY q.fechacreacion DESC");
+        return $query->fetchAll(PDO::FETCH_OBJ);
     }
 }

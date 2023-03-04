@@ -99,29 +99,29 @@ function tabladashboarduser() {
 }
 
 function tablaquejas() {
-  const acciones = (data, type, row) => {
-    if (row.Estado == "Pendiente") {
-      return `
-    <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-    <button class="btn btn-success btn-sm" onclick="atenderQueja(${row.Id})"><i class="fas fa-check"></i></button>
-    <button class="btn btn-danger btn-sm" onclick="rechazarQueja(${row.Id})"><i class="fas fa-times"></i></button>
-    `;
-    } else {
-      return `
-    <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-    `;
-    }
-  };
+  // const acciones = (data, type, row) => {
+  //   if (row.Estado == "Pendiente") {
+  //     return `
+  //   <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+  //   <button class="btn btn-success btn-sm" onclick="atenderQueja(${row.Id})"><i class="fas fa-check"></i></button>
+  //   <button class="btn btn-danger btn-sm" onclick="rechazarQueja(${row.Id})"><i class="fas fa-times"></i></button>
+  //   `;
+  //   } else {
+  //     return `
+  //   <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+  //   `;
+  //   }
+  // };
 
-  const spanestado = (data, type, row) => {
-    if (row.Estado == "Pendiente") {
-      return `<span class="badge badge-warning">${row.Estado}</span>`;
-    } else if (row.Estado == "Atendido") {
-      return `<span class="badge badge-success">${row.Estado}</span>`;
-    } else {
-      return `<span class="badge badge-danger">${row.Estado}</span>`;
-    }
-  };
+  // const spanestado = (data, type, row) => {
+  //   if (row.Estado == "Pendiente") {
+  //     return `<span class="badge badge-warning">${row.Estado}</span>`;
+  //   } else if (row.Estado == "Atendido") {
+  //     return `<span class="badge badge-success">${row.Estado}</span>`;
+  //   } else {
+  //     return `<span class="badge badge-danger">${row.Estado}</span>`;
+  //   }
+  // };
 
   // $("#tablaquejas").DataTable({
   //   paging: true,
@@ -169,6 +169,8 @@ function tablaquejas() {
       responsive: true,
       lengthChange: false,
       autoWidth: false,
+      ordering: false,
+      lengthChange: true,
       buttons: ["csv", "pdf", "print"],
       language: {
         lengthMenu: "Mostrar _MENU_ registros por página",

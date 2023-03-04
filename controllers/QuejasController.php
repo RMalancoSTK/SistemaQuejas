@@ -267,4 +267,13 @@ class QuejasController
         }
         utils::redirect(LOCATION_QUEJAS);
     }
+
+    public function getQuejas()
+    {
+        $quejas = $this->quejasModel->getQuejas();
+        $quejas = array_map(function ($queja) {
+            return (object) $queja;
+        }, $quejas);
+        return $quejas;
+    }
 }
