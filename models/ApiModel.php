@@ -32,6 +32,15 @@ class ApiModel
         ORDER BY q.fechacreacion DESC");
     }
 
+    public function getUsuarios()
+    {
+        return $this->db->query("SELECT u.idusuario, u.usuario, u.nombre, u.apellido, d.nombre AS departamento, r.rol AS rol, u.estado
+        FROM usuarios u
+        INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+        INNER JOIN roles r ON u.idrol = r.idrol
+        WHERE u.idusuario <> 1;");
+    }
+
     public function listarUsuarios($idusuario)
     {
         return $this->db->query("SELECT u.idusuario, u.usuario, u.nombre, u.email as correo, r.rol AS rol, u.estado

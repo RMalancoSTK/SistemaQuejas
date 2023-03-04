@@ -10,6 +10,7 @@ $(function () {
   contadorComentarios();
   obtenerComentarios();
   obtenerArchivos();
+  tablausuarios();
 });
 
 setInterval(function () {
@@ -190,6 +191,69 @@ function tablaquejas() {
     .buttons()
     .container()
     .appendTo("#tablaquejas_wrapper .col-md-6:eq(0)");
+}
+
+function tablausuarios() {
+  const acciones = (data, type, row) => {
+    if (row.estado == 1) {
+      return `
+    <a href="${BASE_URL}usuarios/editar&idusuario=${row.idusuario}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+    <button class="btn btn-danger btn-sm" onclick="desactivarUsuario(${row.idusuario})"><i class="fas fa-times"></i></button>
+    `;
+    } else {
+      return `
+    <button class="btn btn-success btn-sm" onclick="activarUsuario(${row.idusuario})"><i class="fas fa-check"></i></button>
+    `;
+    }
+  };
+
+  const spanestado = (data, type, row) => {
+    if (row.estado == 1) {
+      return `<span class="badge badge-success">Activo</span>`;
+    } else {
+      return `<span class="badge badge-danger">Inactivo</span>`;
+    }
+  };
+
+  $("#tablausuarios").DataTable({
+    paging: true,
+    lengthChange: true,
+    searching: true,
+    ordering: false,
+    info: true,
+    autoWidth: false,
+    responsive: true,
+    ajax: {
+      url: BASE_URL + "api/getusuarios",
+      dataSrc: "",
+    },
+    columns: [
+      { data: "usuario" },
+      { data: "nombre" },
+      { data: "apellido" },
+      { data: "departamento" },
+      { data: "rol" },
+      { data: "estado", render: spanestado },
+      {
+        data: null,
+        render: acciones,
+      },
+    ],
+    language: {
+      lengthMenu: "Mostrar _MENU_ registros por página",
+      zeroRecords: "No se encontraron registros",
+      info: "Mostrando página _PAGE_ de _PAGES_",
+      infoEmpty: "No hay registros disponibles",
+      infoFiltered: "(filtrado de _MAX_ registros totales)",
+      search: "Buscar:",
+      paginate: {
+        first: "Primero",
+        last: "Último",
+        next: "Siguiente",
+        previous: "Anterior",
+      },
+    },
+  });
 }
 
 function eliminarQueja(id) {

@@ -41,6 +41,17 @@ class ApiController
         die();
     }
 
+    public function getusuarios()
+    {
+        $arreglo = array();
+        $query = $this->apiModel->getUsuarios();
+        while ($data = $query->fetch(PDO::FETCH_ASSOC)) {
+            $arreglo[] = $data;
+        }
+        echo json_encode($arreglo);
+        die();
+    }
+
     public function listarusuarios()
     {
         $idusuario = 1;

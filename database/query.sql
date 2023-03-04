@@ -418,3 +418,12 @@ VALUES (55, 'archivo1.jpg', 'image/jpeg', 12345, 'uploads/quejas/55/archivo1.jpg
 INSERT INTO `archivos` (idqueja, nombrearchivo, tipoarchivo, tamanoarchivo, ruta, fechacreacion, fechaactualizacion, estado)
 SELECT 55, 'archivo1.jpg', 'image/jpeg', 12345, 'uploads/quejas/55/archivo1.jpg', NOW(), NOW(), 1
 WHERE NOT EXISTS (SELECT * FROM archivos WHERE idqueja = 55 AND nombrearchivo = 'archivo1.jpg');
+
+-- listado de usuarios para el datatable de usuarios
+-- datos requeridos: usuario, nombre, apellido, departamento, rol, estado
+SELECT u.idusuario, u.usuario, u.nombre, u.apellido, d.nombre AS departamento, r.rol AS rol, u.estado
+FROM usuarios u
+INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+INNER JOIN roles r ON u.idrol = r.idrol
+WHERE u.idusuario <> 1;
+-- con el query aseguramos de que no se muestre el usuario administrador para que no se pueda eliminar
