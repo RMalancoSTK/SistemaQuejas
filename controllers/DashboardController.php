@@ -14,9 +14,20 @@ class DashboardController
         $this->ultimodiadelmesactual = date('t-M-Y');
     }
 
+    public function decryptUserData()
+    {
+        $_SESSION['active'] = true;
+        $_SESSION['idusuario'] = Utils::decryptData($_SESSION['idusuario']);
+        $_SESSION['nombre'] = Utils::decryptData($_SESSION['nombre']);
+        $_SESSION['departamento'] = Utils::decryptData($_SESSION['departamento']);
+        $_SESSION['usuario'] = Utils::decryptData($_SESSION['usuario']);
+        $_SESSION['idrol'] = Utils::decryptData($_SESSION['idrol']);
+        $_SESSION['rol'] = Utils::decryptData($_SESSION['rol']);
+    }
 
     private function loadView($view)
     {
+        $this->decryptUserData();
         if (isset($_SESSION['active'])) {
             include_once 'views/layout/header.php';
             include_once 'views/layout/navbar.php';

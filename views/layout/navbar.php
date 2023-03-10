@@ -11,7 +11,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <div class="dropdown-divider"></div>
-                <h1 class="dropdown dropdown-header">Bienvenido, <?= $_SESSION['nombre']; ?></h1>
+                <h1 class="dropdown dropdown-header">Bienvenido, <?= Utils::decryptData($_SESSION['nombre']) ?></h1>
                 <a href="<?= BASE_URL; ?>usuarios/perfil" class="dropdown-item">
                     <i class="fas fa-pencil-alt mr-2"></i> Editar mi perfil
                 </a>

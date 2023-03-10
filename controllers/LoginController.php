@@ -45,13 +45,23 @@ class LoginController
             die();
         }
 
+        // $_SESSION['active'] = true;
+        // $_SESSION['idusuario'] = $existeUsuario['idusuario'];
+        // $_SESSION['nombre'] = $existeUsuario['nombre'];
+        // $_SESSION['departamento'] = $existeUsuario['departamento'];
+        // $_SESSION['usuario'] = $existeUsuario['usuario'];
+        // $_SESSION['idrol'] = $existeUsuario['idrol'];
+        // $_SESSION['rol'] = $existeUsuario['rol'];
+
+        // encriptar datos de la sesion
+
         $_SESSION['active'] = true;
-        $_SESSION['idusuario'] = $existeUsuario['idusuario'];
-        $_SESSION['nombre'] = $existeUsuario['nombre'];
-        $_SESSION['departamento'] = $existeUsuario['departamento'];
-        $_SESSION['usuario'] = $existeUsuario['usuario'];
-        $_SESSION['idrol'] = $existeUsuario['idrol'];
-        $_SESSION['rol'] = $existeUsuario['rol'];
+        $_SESSION['idusuario'] = Utils::encryptData($existeUsuario['idusuario']);
+        $_SESSION['nombre'] = Utils::encryptData($existeUsuario['nombre']);
+        $_SESSION['departamento'] = Utils::encryptData($existeUsuario['departamento']);
+        $_SESSION['usuario'] = Utils::encryptData($existeUsuario['usuario']);
+        $_SESSION['idrol'] = Utils::encryptData($existeUsuario['idrol']);
+        $_SESSION['rol'] = Utils::encryptData($existeUsuario['rol']);
 
         header(LOCATION_BASE_URL);
     }

@@ -39,8 +39,12 @@
                             <a href="<?= BASE_URL; ?>quejas/misquejas" class="nav-link <?= Utils::setActive('quejas/misquejas'); ?>">
                                 <i class="fas fa-list nav-icon"></i>
                                 <p>Mis quejas</p>
+                                <pre>
+                                <p><?= $this->idrol; ?></p>
+                                </pre>
                             </a>
                         </li>
+
                         <?php if (isset($_SESSION['idrol']) && $_SESSION['idrol'] == 1) : ?>
                             <li class="nav-item">
                                 <a href="<?= BASE_URL; ?>quejas/index" class="nav-link <?= Utils::setActive('quejas/index'); ?>">
