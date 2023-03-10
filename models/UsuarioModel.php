@@ -85,8 +85,9 @@ class UsuarioModel
         $this->rol = $rol;
     }
 
-    public function existeUsuario($usuario)
+    public function existeUsuario()
     {
+        $usuario = Utils::decryptData($this->getUsuario());
         $sql = "SELECT
         u.idusuario,
         CONCAT(u.nombre, ' ', u.apellido) AS nombre,
@@ -102,7 +103,7 @@ class UsuarioModel
         INNER JOIN roles r ON u.idrol = r.idrol
         WHERE usuario = :usuario";
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(':usuario', $usuario);
+        $statement->bindValue(':usuario', (string) $usuario, PDO::PARAM_STR);
         $statement->execute();
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
@@ -133,9 +134,11 @@ class UsuarioModel
     {
         $sql = "UPDATE usuarios SET nombre = :nombre, apellido = :apellido, email = :email WHERE idusuario = :idusuario";
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(':nombre', $nombre);
-        $statement->bindParam(':apellido', $apellido);
-        $statement->bindParam(':email', $email);
+
+        $statement->bindValue(':nombre', (string) $nombre, PDO::PARAM_STR);
+        $statement->bindValue(':apellido', (string) $apellido, PDO::PARAM_STR);
+        $statement->bindValue(':email', (string) $email, PDO::PARAM_STR);
+
         $statement->bindParam(':idusuario', $idusuario);
         return $statement->execute();
     }
@@ -153,8 +156,9 @@ class UsuarioModel
     {
         $sql = "UPDATE usuarios SET password = :password WHERE idusuario = :idusuario";
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(':password', $this->getPassword());
-        $statement->bindParam(':idusuario', $idusuario);
+        $statement->bindValue(':password', (string) $this->getPassword(), PDO::PARAM_STR);
+        $statement->bindValue(':idusuario', (int) $idusuario, PDO::PARAM_INT);
+
         return $statement->execute();
     }
 }

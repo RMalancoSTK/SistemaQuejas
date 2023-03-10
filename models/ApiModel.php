@@ -93,14 +93,16 @@ class ApiModel
         $sql = "INSERT INTO `usuarios` (idrol, iddepartamento, nombre, apellido, email, usuario, password, estado)
         VALUES (:idrol, :iddepartamento, :nombre, :apellido, :email, :usuario, :password, :estado);";
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(':idrol', $idrol);
-        $statement->bindParam(':iddepartamento', $iddepartamento);
-        $statement->bindParam(':nombre', $nombre);
-        $statement->bindParam(':apellido', $apellido);
-        $statement->bindParam(':email', $email);
-        $statement->bindParam(':usuario', $usuario);
-        $statement->bindParam(':password', $password);
-        $statement->bindParam(':estado', $estado);
+
+        $statement->bindValue(':idrol', (int) $idrol, PDO::PARAM_INT);
+        $statement->bindValue(':iddepartamento', (int) $iddepartamento, PDO::PARAM_INT);
+        $statement->bindValue(':nombre', (string) $nombre, PDO::PARAM_STR);
+        $statement->bindValue(':apellido', (string) $apellido, PDO::PARAM_STR);
+        $statement->bindValue(':email', (string) $email, PDO::PARAM_STR);
+        $statement->bindValue(':usuario', (string) $usuario, PDO::PARAM_STR);
+        $statement->bindValue(':password', (string) $password, PDO::PARAM_STR);
+        $statement->bindValue(':estado', (int) $estado, PDO::PARAM_INT);
+
         $statement->execute();
         return $statement->rowCount();
     }
@@ -109,12 +111,12 @@ class ApiModel
     {
         $sql = "UPDATE usuarios SET idrol = :idrol, iddepartamento = :iddepartamento, nombre = :nombre, apellido = :apellido, email = :email WHERE idusuario = :idusuario AND idusuario <> 1;";
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(':idusuario', $idusuario);
-        $statement->bindParam(':idrol', $idrol);
-        $statement->bindParam(':iddepartamento', $iddepartamento);
-        $statement->bindParam(':nombre', $nombre);
-        $statement->bindParam(':apellido', $apellido);
-        $statement->bindParam(':email', $email);
+        $statement->bindValue(':idusuario', (int) $idusuario, PDO::PARAM_INT);
+        $statement->bindValue(':idrol', (int) $idrol, PDO::PARAM_INT);
+        $statement->bindValue(':iddepartamento', (int) $iddepartamento, PDO::PARAM_INT);
+        $statement->bindValue(':nombre', (string) $nombre, PDO::PARAM_STR);
+        $statement->bindValue(':apellido', (string) $apellido, PDO::PARAM_STR);
+        $statement->bindValue(':email', (string) $email, PDO::PARAM_STR);
         $statement->execute();
         return $statement->rowCount();
     }
@@ -130,8 +132,9 @@ class ApiModel
     {
         $sql = "UPDATE usuarios SET password = :password WHERE idusuario = :idusuario;";
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(':idusuario', $idusuario);
-        $statement->bindParam(':password', $passwordhash);
+        $statement->bindValue(':idusuario', (int) $idusuario, PDO::PARAM_INT);
+        $statement->bindValue(':password', (string) $passwordhash, PDO::PARAM_STR);
+
         $statement->execute();
         return $statement->rowCount();
     }
@@ -140,8 +143,9 @@ class ApiModel
     {
         $sql = "UPDATE usuarios SET estado = :estado WHERE idusuario = :idusuario AND idusuario <> 1;";
         $statement = $this->db->prepare($sql);
-        $statement->bindParam(':idusuario', $idusuario);
-        $statement->bindParam(':estado', $estado);
+        $statement->bindValue(':idusuario', (int) $idusuario, PDO::PARAM_INT);
+        $statement->bindValue(':estado', (int) $estado, PDO::PARAM_INT);
+
         $statement->execute();
         return $statement->rowCount();
     }

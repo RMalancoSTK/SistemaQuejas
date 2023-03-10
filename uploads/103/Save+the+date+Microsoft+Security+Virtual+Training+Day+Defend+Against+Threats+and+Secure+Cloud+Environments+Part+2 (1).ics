@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+METHOD:PUBLISH
+PRODID:-//Microsoft Corporation//Outlook 11.0 MIMEDIR//EN
+BEGIN:VEVENT
+UID:29966409f54254b1e
+DTSTAMP:20230309T150330Z
+DTSTART:20230315T140000Z
+DTEND:20230315T160000Z
+SUMMARY:Save the date: Microsoft Security Virtual Training Day: Defend Against Threats and Secure Cloud Environments Part 2
+LOCATION:Digital Event
+DESCRIPTION:How to join the virtual training: \n\nClick the link to join: https://event.on24.com/wcc/r/4084509/955B1EA0DCE1EECC8AF265DBF1BDB803. Please note\, this link is unique for each registrant and should not be forwarded.
+END:VEVENT
+END:VCALENDAR

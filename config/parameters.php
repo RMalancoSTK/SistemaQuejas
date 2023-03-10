@@ -14,6 +14,8 @@ define("CONTROLLER_DEFAULT", "DashboardController");
 define("ACTION_DEFAULT", "inicio");
 define("BASE_URL", getBaseUrl());
 
+define("SECRET_KEY", "quejas");
+
 function getBaseUrl()
 {
     $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';

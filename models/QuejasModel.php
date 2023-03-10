@@ -148,15 +148,16 @@ class QuejasModel
     {
         $query = $this->db->prepare("INSERT INTO `quejas` (idusuario, idestado, idcategoria, idturno, asunto, descripcion, fechacreacion, fechaactualizacion, estado) 
         VALUES ( :idusuario, :idestado, :idcategoria, :idturno, :asunto, :descripcion, :fechacreacion, :fechaactualizacion, :estado);");
-        $query->bindParam(":idusuario", $idusuario);
-        $query->bindParam(":idestado", $idestado);
-        $query->bindParam(":idcategoria", $idcategoria);
-        $query->bindParam(":idturno", $idturno);
-        $query->bindParam(":asunto", $asunto);
-        $query->bindParam(":descripcion", $descripcion);
-        $query->bindParam(":fechacreacion", $fechacreacion);
-        $query->bindParam(":fechaactualizacion", $fechacreacion);
-        $query->bindParam(":estado", $estado);
+        $query->bindValue(":idusuario", (int) $idusuario, PDO::PARAM_INT);
+        $query->bindValue(":idestado", (int) $idestado, PDO::PARAM_INT);
+        $query->bindValue(":idcategoria", (int) $idcategoria, PDO::PARAM_INT);
+        $query->bindValue(":idturno", (int) $idturno, PDO::PARAM_INT);
+        $query->bindValue(":asunto", (string) $asunto, PDO::PARAM_STR);
+        $query->bindValue(":descripcion", (string) $descripcion, PDO::PARAM_STR);
+        $query->bindValue(":fechacreacion", $fechacreacion, PDO::PARAM_STR);
+        $query->bindValue(":fechaactualizacion", $fechacreacion, PDO::PARAM_STR);
+        $query->bindValue(":estado", (int) $estado, PDO::PARAM_INT);
+
         $query->execute();
         return $this->db->lastInsertId();
     }
@@ -166,14 +167,14 @@ class QuejasModel
         $query = $this->db->prepare("INSERT INTO `archivos` (idqueja, nombrearchivo, tipoarchivo, tamanoarchivo, ruta, fechacreacion, fechaactualizacion, estado)
         SELECT :idqueja, :nombrearchivo, :tipoarchivo, :tamanoarchivo, :ruta, :fechacreacion, :fechaactualizacion, :estado
         WHERE NOT EXISTS (SELECT * FROM archivos WHERE idqueja = :idqueja AND nombrearchivo = :nombrearchivo);");
-        $query->bindParam(":idqueja", $idqueja);
-        $query->bindParam(":nombrearchivo", $nombrearchivo);
-        $query->bindParam(":tipoarchivo", $tipoarchivo);
-        $query->bindParam(":tamanoarchivo", $tamanoarchivo);
-        $query->bindParam(":ruta", $ruta);
-        $query->bindParam(":fechacreacion", $fechacreacion);
-        $query->bindParam(":fechaactualizacion", $fechacreacion);
-        $query->bindParam(":estado", $estado);
+        $query->bindValue(":idqueja", (int) $idqueja, PDO::PARAM_INT);
+        $query->bindValue(":nombrearchivo", (string) $nombrearchivo, PDO::PARAM_STR);
+        $query->bindValue(":tipoarchivo", (string) $tipoarchivo, PDO::PARAM_STR);
+        $query->bindValue(":tamanoarchivo", (int) $tamanoarchivo, PDO::PARAM_INT);
+        $query->bindValue(":ruta", (string) $ruta, PDO::PARAM_STR);
+        $query->bindValue(":fechacreacion", $fechacreacion, PDO::PARAM_STR);
+        $query->bindValue(":fechaactualizacion", $fechacreacion, PDO::PARAM_STR);
+        $query->bindValue(":estado", (int) $estado, PDO::PARAM_INT);
         return $query->execute();
     }
 
@@ -194,21 +195,22 @@ class QuejasModel
     public function updateQueja($idqueja, $idcategoria, $idturno, $asunto, $descripcion, $fechaactualizacion)
     {
         $query = $this->db->prepare("UPDATE quejas SET idcategoria = :idcategoria, idturno = :idturno, asunto = :asunto, descripcion = :descripcion, fechaactualizacion = :fechaactualizacion WHERE idqueja = :idqueja;");
-        $query->bindParam(":idqueja", $idqueja);
-        $query->bindParam(":idcategoria", $idcategoria);
-        $query->bindParam(":idturno", $idturno);
-        $query->bindParam(":asunto", $asunto);
-        $query->bindParam(":descripcion", $descripcion);
-        $query->bindParam(":fechaactualizacion", $fechaactualizacion);
+        $query->bindValue(":idqueja", (int) $idqueja, PDO::PARAM_INT);
+        $query->bindValue(":idcategoria", (int) $idcategoria, PDO::PARAM_INT);
+        $query->bindValue(":idturno", (int) $idturno, PDO::PARAM_INT);
+        $query->bindValue(":asunto", (string) $asunto, PDO::PARAM_STR);
+        $query->bindValue(":descripcion", (string) $descripcion, PDO::PARAM_STR);
+        $query->bindValue(":fechaactualizacion", $fechaactualizacion, PDO::PARAM_STR);
         return $query->execute();
     }
 
     public function cambiarEstadoQueja($idqueja, $fechaactualizacion, $idestado)
     {
         $query = $this->db->prepare("UPDATE quejas SET fechaactualizacion = :fechaactualizacion, idestado = :idestado WHERE idqueja = :idqueja;");
-        $query->bindParam(":idqueja", $idqueja);
-        $query->bindParam(":fechaactualizacion", $fechaactualizacion);
-        $query->bindParam(":idestado", $idestado);
+        $query->bindValue(":idqueja", (int) $idqueja, PDO::PARAM_INT);
+        $query->bindValue(":fechaactualizacion", $fechaactualizacion, PDO::PARAM_STR);
+        $query->bindValue(":idestado", (int) $idestado, PDO::PARAM_INT);
+
         return $query->execute();
     }
 
