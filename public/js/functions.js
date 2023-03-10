@@ -100,71 +100,6 @@ function tabladashboarduser() {
 }
 
 function tablaquejas() {
-  // const acciones = (data, type, row) => {
-  //   if (row.Estado == "Pendiente") {
-  //     return `
-  //   <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-  //   <button class="btn btn-success btn-sm" onclick="atenderQueja(${row.Id})"><i class="fas fa-check"></i></button>
-  //   <button class="btn btn-danger btn-sm" onclick="rechazarQueja(${row.Id})"><i class="fas fa-times"></i></button>
-  //   `;
-  //   } else {
-  //     return `
-  //   <a href="${BASE_URL}quejas/ver&idqueja=${row.Id}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-  //   `;
-  //   }
-  // };
-
-  // const spanestado = (data, type, row) => {
-  //   if (row.Estado == "Pendiente") {
-  //     return `<span class="badge badge-warning">${row.Estado}</span>`;
-  //   } else if (row.Estado == "Atendido") {
-  //     return `<span class="badge badge-success">${row.Estado}</span>`;
-  //   } else {
-  //     return `<span class="badge badge-danger">${row.Estado}</span>`;
-  //   }
-  // };
-
-  // $("#tablaquejas").DataTable({
-  //   paging: true,
-  //   lengthChange: true,
-  //   searching: true,
-  //   ordering: false,
-  //   info: true,
-  //   autoWidth: false,
-  //   responsive: true,
-  //   ajax: {
-  //     url: BASE_URL + "api/getquejas",
-  //     dataSrc: "",
-  //   },
-  //   columns: [
-  //     { data: "Id" },
-  //     { data: "Fecha" },
-  //     { data: "Quien Registra" },
-  //     { data: "Asunto" },
-  //     { data: "Departamento" },
-  //     { data: "Tipo" },
-  //     { data: "Estado", render: spanestado },
-  //     {
-  //       data: null,
-  //       render: acciones,
-  //     },
-  //   ],
-  //   language: {
-  //     lengthMenu: "Mostrar _MENU_ registros por página",
-  //     zeroRecords: "No se encontraron registros",
-  //     info: "Mostrando página _PAGE_ de _PAGES_",
-  //     infoEmpty: "No hay registros disponibles",
-  //     infoFiltered: "(filtrado de _MAX_ registros totales)",
-  //     search: "Buscar:",
-  //     paginate: {
-  //       first: "Primero",
-  //       last: "Último",
-  //       next: "Siguiente",
-  //       previous: "Anterior",
-  //     },
-  //   },
-  // });
-
   $("#tablaquejas")
     .DataTable({
       responsive: true,
@@ -196,8 +131,10 @@ function tablaquejas() {
 function tablausuarios() {
   const acciones = (data, type, row) => {
     if (row.estado == 1) {
+      // editar, cambiar contraseña, desactivar
       return `
-    <a href="${BASE_URL}usuarios/editar&idusuario=${row.idusuario}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
+    <a href="" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalUsuario" onclick="editarUsuario(${row.idusuario})"><i class="fas fa-edit"></i></a>
+    <a href="" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalcambiarpassword" onclick="cambiarPassword(${row.idusuario})"><i class="fas fa-key"></i></a>
     <button class="btn btn-danger btn-sm" onclick="desactivarUsuario(${row.idusuario})"><i class="fas fa-times"></i></button>
     `;
     } else {
@@ -350,7 +287,6 @@ function comentar(event) {
   event.preventDefault();
   const idqueja = document.getElementById("idqueja").value;
   const comentario = document.getElementById("comentario").value;
-  console.log("comentar " + idqueja);
   $.ajax({
     url: BASE_URL + "api/comentar",
     type: "POST",
@@ -489,6 +425,179 @@ function rechazarQueja(idqueja) {
           if (data.status == "ok") {
             Swal.fire("¡Rechazada!", data.message, "success");
             $("#tablaquejas").DataTable().ajax.reload();
+          } else {
+            Swal.fire("¡Error!", data.message, "error");
+          }
+        },
+      });
+    }
+  });
+}
+
+function cambiarPassword(idusuario) {
+  $.ajax({
+    url: BASE_URL + "api/getUsuario",
+    type: "POST",
+    data: { idusuario: idusuario },
+    success: function (response) {
+      var data = JSON.parse(response);
+      if (data.status == "ok") {
+        var usuario = data.data;
+        document.getElementById("cambiarpasswordidusuario").value =
+          usuario.idusuario;
+      }
+    },
+  });
+}
+
+function guardarUsuario(event) {
+  event.preventDefault();
+
+  var idusuario = document.getElementById("idusuario").value;
+  var usuario = document.getElementById("usuario").value;
+  var password = document.getElementById("password").value;
+  var nombre = document.getElementById("nombre").value;
+  var apellido = document.getElementById("apellido").value;
+  var email = document.getElementById("email").value;
+  var departamento = document.getElementById("departamento").value;
+  var rol = document.getElementById("rol").value;
+
+  $.ajax({
+    url: BASE_URL + "api/guardarUsuario",
+    type: "POST",
+    data: {
+      idusuario: idusuario,
+      usuario: usuario,
+      password: password,
+      nombre: nombre,
+      apellido: apellido,
+      email: email,
+      departamento: departamento,
+      rol: rol,
+    },
+    success: function (response) {
+      var data = JSON.parse(response);
+      if (data.status == "ok") {
+        Swal.fire("¡Guardado!", data.message, "success");
+        $("#tablausuarios").DataTable().ajax.reload();
+        $("#formUsuario")[0].reset();
+        $("#modalUsuario").modal("hide");
+      } else {
+        Swal.fire("¡Error!", data.message, "error");
+      }
+    },
+  });
+  return false;
+}
+
+function editarUsuario(idusuario) {
+  $.ajax({
+    url: BASE_URL + "api/getUsuario",
+    type: "POST",
+    data: { idusuario: idusuario },
+    success: function (response) {
+      var data = JSON.parse(response);
+      if (data.status == "ok") {
+        var usuario = data.data;
+        document.getElementById("idusuario").value = usuario.idusuario;
+        document.getElementById("usuario").value = usuario.usuario;
+        document.getElementById("usuario").setAttribute("readonly", true);
+        document.getElementById("divpassword").style.height = "0";
+        document.getElementById("nombre").value = usuario.nombre;
+        document.getElementById("apellido").value = usuario.apellido;
+        document.getElementById("email").value = usuario.email;
+        document.getElementById("departamento").value = usuario.iddepartamento;
+        document.getElementById("rol").value = usuario.idrol;
+      } else {
+        Swal.fire("¡Error!", data.message, "error");
+      }
+    },
+  });
+}
+
+function limpiarFormularioUsuario() {
+  document.getElementById("idusuario").value = "";
+  document.getElementById("usuario").value = "";
+  document.getElementById("usuario").removeAttribute("readonly");
+  document.getElementById("divpassword").style.height = "";
+  document.getElementById("nombre").value = "";
+  document.getElementById("apellido").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("departamento").value = "";
+  document.getElementById("rol").value = "";
+}
+
+function guardarPassword(event) {
+  event.preventDefault();
+  var password = document.getElementById("password").value;
+  var idusuario = document.getElementById("cambiarpasswordidusuario").value;
+  $.ajax({
+    url: BASE_URL + "api/guardarPassword",
+    type: "POST",
+    data: { idusuario: idusuario, password: password },
+    success: function (response) {
+      var data = JSON.parse(response);
+      if (data.status == "ok") {
+        Swal.fire("¡Guardado!", data.message, "success");
+        $("#tablausuarios").DataTable().ajax.reload();
+        $("#modalcambiarpassword").modal("hide");
+      } else {
+        Swal.fire("¡Error!", data.message, "error");
+      }
+    },
+  });
+  return false;
+}
+
+function desactivarUsuario(idusuario) {
+  Swal.fire({
+    title: "¿Estás seguro de desactivar el usuario?",
+    text: "El usuario no podrá iniciar sesión pero no se eliminará de la base de datos",
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonColor: "#28a745",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "¡Sí, desactivar!",
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        url: BASE_URL + "api/desactivarUsuario",
+        type: "POST",
+        data: { idusuario: idusuario },
+        success: function (response) {
+          var data = JSON.parse(response);
+          if (data.status == "ok") {
+            Swal.fire("¡Desactivado!", data.message, "success");
+            $("#tablausuarios").DataTable().ajax.reload();
+          } else {
+            Swal.fire("¡Error!", data.message, "error");
+          }
+        },
+      });
+    }
+  });
+}
+
+function activarUsuario(idusuario) {
+  Swal.fire({
+    title: "¿Estás seguro de activar el usuario?",
+    text: "El usuario podrá iniciar sesión",
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonColor: "#28a745",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "¡Sí, activar!",
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        url: BASE_URL + "api/activarUsuario",
+        type: "POST",
+        data: { idusuario: idusuario },
+        success: function (response) {
+          var data = JSON.parse(response);
+          if (data.status == "ok") {
+            Swal.fire("¡Activado!", data.message, "success");
+            $("#tablausuarios").DataTable().ajax.reload();
           } else {
             Swal.fire("¡Error!", data.message, "error");
           }

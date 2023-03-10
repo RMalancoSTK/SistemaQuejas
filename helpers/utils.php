@@ -59,6 +59,7 @@ class Utils
         }
         return $breadCrumbs;
     }
+
     public static function setActive($path)
     {
         $actualpath = $_SERVER['REQUEST_URI'];
@@ -106,6 +107,17 @@ class Utils
                 self::setErrorMessage('Todos los campos son obligatorios');
                 self::redirect($redirectLocation);
                 exit();
+            }
+        }
+    }
+
+    public static function validateFieldsjson($requiredFields, $method)
+    {
+        foreach ($requiredFields as $field) {
+            if (!isset($method[$field]) || empty($method[$field])) {
+                $arreglo = array('status' => 'error', 'message' => 'Todos los campos son obligatorios');
+                echo json_encode($arreglo);
+                die();
             }
         }
     }

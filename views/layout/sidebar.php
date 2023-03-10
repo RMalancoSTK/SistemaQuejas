@@ -51,16 +51,23 @@
                         <?php endif; ?>
                     </ul>
                 </li>
-                <?php if (isset($_SESSION['idrol']) && $_SESSION['idrol'] == 1) : ?>
-
-                    <li class="nav-item has-treeview <?= Utils::setMenuOpen('usuarios'); ?>">
-                        <a href="" class="nav-link <?= Utils::setActive('usuarios'); ?>">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>
-                                Usuarios
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
+                <li class="nav-item has-treeview <?= Utils::setMenuOpen('usuarios'); ?>">
+                    <a href="" class="nav-link <?= Utils::setActive('usuarios'); ?>">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Usuarios
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?= BASE_URL; ?>usuarios/perfil" class="nav-link <?= Utils::setActive('usuarios/perfil'); ?>">
+                                <i class="fas fa-user nav-icon"></i>
+                                <p>Mi perfil</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <?php if (isset($_SESSION['idrol']) && $_SESSION['idrol'] == 1) : ?>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="<?= BASE_URL; ?>usuarios/listar" class="nav-link <?= Utils::setActive('usuarios/listar'); ?>">
@@ -69,25 +76,9 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
-                    <li class="nav-item has-treeview <?= Utils::setMenuOpen('ajustes'); ?>">
-                        <a href="" class="nav-link <?= Utils::setActive('ajustes'); ?>">
-                            <i class="nav-icon fas fa-tools"></i>
-                            <p>
-                                Ajustes
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="<?= BASE_URL; ?>ajustes/general" class="nav-link <?= Utils::setActive('ajustes/general'); ?>">
-                                    <i class="fas fa-list nav-icon"></i>
-                                    <p>Generales</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </li>
+
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

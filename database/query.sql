@@ -1,6 +1,10 @@
 -- Active: 1675911106265@@127.0.0.1@3306@db_quejas
 use db_quejas;
 
+-- crear la base de datos db_quejas
+CREATE DATABASE IF NOT EXISTS db_quejas DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
 CREATE TABLE IF NOT EXISTS departamentos (
   iddepartamento int(11) NOT NULL AUTO_INCREMENT,
   nombre varchar(50) NOT NULL,
@@ -121,8 +125,33 @@ INSERT INTO `roles` (`idrol`, `rol`) VALUES
 (1, 'Administrador'),
 (2, 'Usuario');
 
-INSERT INTO `usuarios` (idusuario, idrol, iddepartamento, nombre, apellido, email, usuario, password, estado) VALUES
-(1, 1, 1, 'Administrador', 'Administrador', 'admin@localhost', 'admin', '$2y$04$tLyTI7OutXs4oQkY7UsiauVOrF0VPhwFIpAf2zNFjeuA6OS5tR.56', 1);
+INSERT INTO `usuarios` (idrol, iddepartamento, nombre, apellido, email, usuario, password, estado) 
+VALUES ( 1, 1, 'Administrador', 'Administrador', 'admin@localhost', 'admin', '$2y$04$tLyTI7OutXs4oQkY7UsiauVOrF0VPhwFIpAf2zNFjeuA6OS5tR.56', 1);
+
+-- ACTUALIZAR DATOS USUARIO idrol, iddepartamento, nombre, apellido, email, usuario, password, estado
+UPDATE usuarios SET 
+idrol = 1, 
+iddepartamento = 1, 
+nombre = 'Administrador', 
+apellido = 'Administrador', 
+email = 'admin@localhost', 
+usuario = 'admin', 
+password = '$2y$04$tLyTI7OutXs4oQkY7UsiauVOrF0VPhwFIpAf2zNFjeuA6OS5tR.56', 
+estado = 1
+WHERE idusuario = 1;
+
+-- el mismo query de update pero que compare si es el administrador no hacer el cambio
+UPDATE usuarios SET
+idrol = 1,
+iddepartamento = 1,
+nombre = 'Administrador',
+apellido = 'Administrador',
+email = 'admin@localhost',
+usuario = 'admin',
+password = '$2y$04$tLyTI7OutXs4oQkY7UsiauVOrF0VPhwFIpAf2zNFjeuA6OS5tR.56',
+estado = 1
+WHERE idusuario = 2 AND idusuario <> 1;
+
 
 -- registrar un usuario
 INSERT INTO `usuarios` ( idrol, iddepartamento, nombre, apellido, email, usuario, password, estado) VALUES
@@ -427,3 +456,17 @@ INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
 INNER JOIN roles r ON u.idrol = r.idrol
 WHERE u.idusuario <> 1;
 -- con el query aseguramos de que no se muestre el usuario administrador para que no se pueda eliminar
+
+SELECT * FROM departamentos;
+
+SELECT * FROM roles;
+
+SELECT u.idusuario, u.idrol, u.iddepartamento, u.nombre, u.apellido, u.email, u.usuario, u.password, u.estado
+FROM usuarios u
+WHERE u.idusuario = 2;
+
+SELECT u.idusuario, CONCAT(u.nombre, ' ', u.apellido) AS nombre, u.usuario, u.password, u.email, u.estado, d.nombre AS departamento, r.rol AS rol, u.idrol
+FROM usuarios u
+INNER JOIN departamentos d ON u.iddepartamento = d.iddepartamento
+INNER JOIN roles r ON u.idrol = r.idrol
+WHERE u.idusuario = 1;

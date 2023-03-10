@@ -1,16 +1,20 @@
 <?php
 require_once 'models/ApiModel.php';
 require_once 'models/QuejasModel.php';
+require_once 'models/UsuarioModel.php';
+
 
 class ApiController
 {
     private $apiModel;
     private $quejasModel;
+    private $usuarioModel;
 
     public function __construct()
     {
         $this->apiModel = new ApiModel();
         $this->quejasModel = new QuejasModel();
+        $this->usuarioModel = new UsuarioModel();
     }
 
     public function obtenerBaseURL()
@@ -81,9 +85,12 @@ class ApiController
         $idqueja = $_POST['idqueja'];
         $arreglo = array();
         $query = $this->apiModel->getComentarios($idqueja);
+        // PDO::FETCH_ASSOC: devuelve un array indexado por el nombre de la columna como se devuelve en el conjunto de resultados
         while ($data = $query->fetch(PDO::FETCH_ASSOC)) {
             $arreglo[] = $data;
         }
+        // EN MYSQLI: $arreglo[] = $data->fetch_assoc(); LA DIFERENCIA ES QUE EN MYSQLI NO SE NECESITA EL FETCH_ASSOC
+        // PARA QUE SEA DE TIPO OBJETO EN MYSQLI SE DEBE USAR $data->fetch_object()
         echo json_encode(array('status' => 'ok', 'data' => $arreglo));
         die();
     }
@@ -187,6 +194,103 @@ class ApiController
             echo json_encode(array('status' => 'ok', 'message' => 'Queja rechazada correctamente'));
         } else {
             echo json_encode(array('status' => 'error', 'message' => 'No se pudo rechazar la queja'));
+        }
+    }
+
+    public function guardarUsuario()
+    {
+        $idusuario = $_POST['idusuario'];
+        $usuario = $_POST['usuario'];
+        $password = $_POST['password'];
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $email = $_POST['email'];
+        $iddepartamento = $_POST['departamento'];
+        $idrol = $_POST['rol'];
+        $estado = 1;
+        $existeUsuario = $this->usuarioModel->existeUsuario($usuario);
+
+        if (empty($idusuario) || !isset($idusuario)) {
+
+            if (empty($usuario) || !isset($usuario) || empty($password) || !isset($password) || empty($nombre) || !isset($nombre) || empty($apellido) || !isset($apellido) || empty($email) || !isset($email) || empty($iddepartamento) || !isset($iddepartamento) || empty($idrol) || !isset($idrol)) {
+                echo json_encode(array('status' => 'error', 'message' => 'Todos los campos son obligatorios'));
+                die();
+            }
+
+            if (!$existeUsuario) {
+                $this->usuarioModel->setPassword($password);
+                $passwordhash = $this->usuarioModel->getPassword();
+                $query = $this->apiModel->guardarUsuario($idrol, $iddepartamento, $nombre, $apellido, $email, $usuario, $passwordhash, $estado);
+                if ($query) {
+                    echo json_encode(array('status' => 'ok', 'message' => 'Usuario registrado correctamente'));
+                } else {
+                    echo json_encode(array('status' => 'error', 'message' => 'No se pudo registrar el usuario'));
+                }
+            } else {
+                echo json_encode(array('status' => 'error', 'message' => 'El usuario ya existe'));
+            }
+        } else {
+
+            if (empty($idusuario) || !isset($idusuario) || empty($idrol) || !isset($idrol) || empty($iddepartamento) || !isset($iddepartamento) || empty($nombre) || !isset($nombre) || empty($apellido) || !isset($apellido) || empty($email) || !isset($email)) {
+                echo json_encode(array('status' => 'error', 'message' => 'Todos los campos son obligatorios'));
+                die();
+            }
+
+            $query = $this->apiModel->actualizarUsuario($idusuario, $idrol, $iddepartamento, $nombre, $apellido, $email);
+            if ($query) {
+                echo json_encode(array('status' => 'ok', 'message' => 'Usuario actualizado correctamente'));
+            } else {
+                echo json_encode(array('status' => 'error', 'message' => 'No se pudo actualizar el usuario'));
+            }
+        }
+    }
+
+    public function getUsuario()
+    {
+        $idusuario = $_POST['idusuario'];
+        $query = $this->apiModel->getUsuario($idusuario);
+        $data = $query->fetch(PDO::FETCH_ASSOC);
+        echo json_encode(array('status' => 'ok', 'data' => $data));
+        die();
+    }
+
+    public function guardarPassword()
+    {
+        $idusuario = $_POST['idusuario'];
+        $password = $_POST['password'];
+        $this->usuarioModel->setPassword($password);
+        $passwordhash = $this->usuarioModel->getPassword();
+        $query = $this->apiModel->guardarPassword($idusuario, $passwordhash);
+        if ($query) {
+            echo json_encode(array('status' => 'ok', 'message' => 'Contraseña actualizada correctamente'));
+        } else {
+            echo json_encode(array('status' => 'error', 'message' => 'No se pudo actualizar la contraseña'));
+        }
+    }
+
+    public function desactivarUsuario()
+    {
+        Utils::isAdmin();
+        $idusuario = $_POST['idusuario'];
+        $estado = 0;
+        $query = $this->apiModel->desactivarUsuario($idusuario, $estado);
+        if ($query) {
+            echo json_encode(array('status' => 'ok', 'message' => 'Usuario desactivado correctamente'));
+        } else {
+            echo json_encode(array('status' => 'error', 'message' => 'No se pudo desactivar el usuario'));
+        }
+    }
+
+    public function activarUsuario()
+    {
+        Utils::isAdmin();
+        $idusuario = $_POST['idusuario'];
+        $estado = 1;
+        $query = $this->apiModel->desactivarUsuario($idusuario, $estado);
+        if ($query) {
+            echo json_encode(array('status' => 'ok', 'message' => 'Usuario activado correctamente'));
+        } else {
+            echo json_encode(array('status' => 'error', 'message' => 'No se pudo activar el usuario'));
         }
     }
 }

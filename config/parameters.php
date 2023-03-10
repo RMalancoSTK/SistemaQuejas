@@ -31,6 +31,7 @@ define("LOCATION_QUEJAS_CREAR", "Location: " . BASE_URL . "quejas/crear"); // Re
 define("LOCATION_QUEJAS_MISQUEJAS", "Location: " . BASE_URL . "quejas/misquejas"); // Redirecciona a la página de mis quejas
 define("LOCATION_QUEJAS_EDITAR", "Location: " . BASE_URL . "quejas/editar"); // Redirecciona a la página de editar quejas
 define("LOCATION_QUEJAS", "Location: " . BASE_URL . "quejas/index"); // Redirecciona a la página de quejas
+define("LOCATION_USUARIO_PERFIL", "Location: " . BASE_URL . "usuarios/perfil"); // Redirecciona a la página de perfil de usuario
 
 // MENSAJES DE ERRORES Y EXITOS
 // Mensajes de error

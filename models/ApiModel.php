@@ -87,4 +87,62 @@ class ApiModel
         FROM archivos a
         WHERE a.idqueja = $idqueja;");
     }
+
+    public function guardarUsuario($idrol, $iddepartamento, $nombre, $apellido, $email, $usuario, $password, $estado)
+    {
+        $sql = "INSERT INTO `usuarios` (idrol, iddepartamento, nombre, apellido, email, usuario, password, estado)
+        VALUES (:idrol, :iddepartamento, :nombre, :apellido, :email, :usuario, :password, :estado);";
+        $statement = $this->db->prepare($sql);
+        $statement->bindParam(':idrol', $idrol);
+        $statement->bindParam(':iddepartamento', $iddepartamento);
+        $statement->bindParam(':nombre', $nombre);
+        $statement->bindParam(':apellido', $apellido);
+        $statement->bindParam(':email', $email);
+        $statement->bindParam(':usuario', $usuario);
+        $statement->bindParam(':password', $password);
+        $statement->bindParam(':estado', $estado);
+        $statement->execute();
+        return $statement->rowCount();
+    }
+
+    public function actualizarUsuario($idusuario, $idrol, $iddepartamento, $nombre, $apellido, $email)
+    {
+        $sql = "UPDATE usuarios SET idrol = :idrol, iddepartamento = :iddepartamento, nombre = :nombre, apellido = :apellido, email = :email WHERE idusuario = :idusuario AND idusuario <> 1;";
+        $statement = $this->db->prepare($sql);
+        $statement->bindParam(':idusuario', $idusuario);
+        $statement->bindParam(':idrol', $idrol);
+        $statement->bindParam(':iddepartamento', $iddepartamento);
+        $statement->bindParam(':nombre', $nombre);
+        $statement->bindParam(':apellido', $apellido);
+        $statement->bindParam(':email', $email);
+        $statement->execute();
+        return $statement->rowCount();
+    }
+
+    public function getUsuario($idusuario)
+    {
+        return $this->db->query("SELECT u.idusuario, u.idrol, u.iddepartamento, u.nombre, u.apellido, u.email, u.usuario, u.password, u.estado
+        FROM usuarios u
+        WHERE u.idusuario = $idusuario;");
+    }
+
+    public function guardarPassword($idusuario, $passwordhash)
+    {
+        $sql = "UPDATE usuarios SET password = :password WHERE idusuario = :idusuario;";
+        $statement = $this->db->prepare($sql);
+        $statement->bindParam(':idusuario', $idusuario);
+        $statement->bindParam(':password', $passwordhash);
+        $statement->execute();
+        return $statement->rowCount();
+    }
+
+    public function desactivarUsuario($idusuario, $estado)
+    {
+        $sql = "UPDATE usuarios SET estado = :estado WHERE idusuario = :idusuario AND idusuario <> 1;";
+        $statement = $this->db->prepare($sql);
+        $statement->bindParam(':idusuario', $idusuario);
+        $statement->bindParam(':estado', $estado);
+        $statement->execute();
+        return $statement->rowCount();
+    }
 }
