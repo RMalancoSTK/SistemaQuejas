@@ -79,7 +79,25 @@
                         </ul>
                     <?php endif; ?>
                 </li>
-
+                <?php if (isset($_SESSION['idrol']) && $_SESSION['idrol'] == 1) : ?>
+                    <li class="nav-item has-treeview <?= Utils::setMenuOpen('ajustes'); ?>">
+                        <a href="" class="nav-link <?= Utils::setActive('ajustes'); ?>">
+                            <i class="nav-icon fas fa-tools"></i>
+                            <p>
+                                Ajustes
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="<?= BASE_URL; ?>ajustes/general" class="nav-link <?= Utils::setActive('ajustes/general'); ?>">
+                                    <i class="fas fa-list nav-icon"></i>
+                                    <p>Generales</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                <?php endif; ?>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
