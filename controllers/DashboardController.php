@@ -1,50 +1,21 @@
 <?php
 require_once 'models/QuejasModel.php';
 
-class DashboardController
+class DashboardController extends Controller
 {
     private $quejasModel;
-    private $primerdiadelmesactual;
-    private $ultimodiadelmesactual;
 
     public function __construct()
     {
         $this->quejasModel = new QuejasModel();
-        $this->primerdiadelmesactual = date('01-M-Y');
-        $this->ultimodiadelmesactual = date('t-M-Y');
-    }
-
-    public function decryptUserData()
-    {
-        $_SESSION['active'] = true;
-        $_SESSION['idusuario'] = Utils::decryptData($_SESSION['idusuario']);
-        $_SESSION['nombre'] = Utils::decryptData($_SESSION['nombre']);
-        $_SESSION['departamento'] = Utils::decryptData($_SESSION['departamento']);
-        $_SESSION['usuario'] = Utils::decryptData($_SESSION['usuario']);
-        $_SESSION['idrol'] = Utils::decryptData($_SESSION['idrol']);
-        $_SESSION['rol'] = Utils::decryptData($_SESSION['rol']);
-    }
-
-    private function loadView($view)
-    {
-        $this->decryptUserData();
-        if (isset($_SESSION['active'])) {
-            include_once 'views/layout/header.php';
-            include_once 'views/layout/navbar.php';
-            include_once 'views/layout/sidebar.php';
-            require_once "views/dashboard/$view.php";
-            include_once 'views/layout/footer.php';
-        } else {
-            header(LOCATION_LOGIN);
-        }
     }
 
     public function index()
     {
         if (!isset($_SESSION['idrol']) || $_SESSION['idrol'] != 1) {
-            $this->loadView('user');
+            $this->loadView('dashboard/user');
         } else {
-            $this->loadView('admin');
+            $this->loadView('dashboard/admin');
         }
     }
 

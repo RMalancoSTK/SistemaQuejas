@@ -8,6 +8,8 @@ function controllers_autoload($classname)
         require_once 'models/' . $classname . '.php';
     } elseif (file_exists('helpers/' . $classname . '.php')) {
         require_once 'helpers/' . $classname . '.php';
+    } elseif (file_exists('core/' . $classname . '.php')) {
+        require_once 'core/' . $classname . '.php';
     }
 }
 spl_autoload_register('controllers_autoload');

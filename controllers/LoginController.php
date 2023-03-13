@@ -2,7 +2,7 @@
 
 require_once 'models/UsuarioModel.php';
 
-class LoginController
+class LoginController extends Controller
 {
     private $usuarioModel;
 
@@ -22,7 +22,7 @@ class LoginController
             header(LOCATION_LOGIN);
         }
 
-        $usuario = Utils::encryptData(Utils::limpiarDatos($_POST['usuario']));
+        $usuario = Utils::limpiarDatos($_POST['usuario']);
         $password = Utils::limpiarDatos($_POST['password']);
         $this->usuarioModel->setUsuario($usuario);
         $existeUsuario = $this->usuarioModel->existeUsuario();
@@ -45,23 +45,17 @@ class LoginController
             die();
         }
 
-        // $_SESSION['active'] = true;
-        // $_SESSION['idusuario'] = $existeUsuario['idusuario'];
-        // $_SESSION['nombre'] = $existeUsuario['nombre'];
-        // $_SESSION['departamento'] = $existeUsuario['departamento'];
-        // $_SESSION['usuario'] = $existeUsuario['usuario'];
-        // $_SESSION['idrol'] = $existeUsuario['idrol'];
-        // $_SESSION['rol'] = $existeUsuario['rol'];
+        $this->dataSession = [
+            'active' => true,
+            'idusuario' => $existeUsuario['idusuario'],
+            'nombre' => $existeUsuario['nombre'],
+            'departamento' => $existeUsuario['departamento'],
+            'usuario' => $existeUsuario['usuario'],
+            'idrol' => $existeUsuario['idrol'],
+            'rol' => $existeUsuario['rol'],
+        ];
 
-        // encriptar datos de la sesion
-
-        $_SESSION['active'] = true;
-        $_SESSION['idusuario'] = Utils::encryptData($existeUsuario['idusuario']);
-        $_SESSION['nombre'] = Utils::encryptData($existeUsuario['nombre']);
-        $_SESSION['departamento'] = Utils::encryptData($existeUsuario['departamento']);
-        $_SESSION['usuario'] = Utils::encryptData($existeUsuario['usuario']);
-        $_SESSION['idrol'] = Utils::encryptData($existeUsuario['idrol']);
-        $_SESSION['rol'] = Utils::encryptData($existeUsuario['rol']);
+        $_SESSION = $this->dataSession;
 
         header(LOCATION_BASE_URL);
     }

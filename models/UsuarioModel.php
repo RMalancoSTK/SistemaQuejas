@@ -87,7 +87,7 @@ class UsuarioModel
 
     public function existeUsuario()
     {
-        $usuario = Utils::decryptData($this->getUsuario());
+        $usuario = $this->getUsuario();
         $sql = "SELECT
         u.idusuario,
         CONCAT(u.nombre, ' ', u.apellido) AS nombre,

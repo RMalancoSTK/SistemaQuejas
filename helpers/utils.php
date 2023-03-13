@@ -19,6 +19,13 @@ class Utils
         }
     }
 
+    public static function verificarSesion()
+    {
+        if (!isset($_SESSION['active'])) {
+            header(LOCATION_LOGIN);
+        }
+    }
+
     public static function isAdmin()
     {
         if (!isset($_SESSION['idrol']) || $_SESSION['idrol'] != 1) {
@@ -120,32 +127,5 @@ class Utils
                 die();
             }
         }
-    }
-
-    public static function encryptData($data)
-    {
-        $key = hash('sha256', SECRET_KEY);
-        $ivLen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
-        $iv = openssl_random_pseudo_bytes($ivLen);
-        $cipherTextRaw = openssl_encrypt($data, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-        $hmac = hash_hmac('sha256', $cipherTextRaw, $key, true);
-        $cipherText = base64_encode($iv . $hmac . $cipherTextRaw);
-        return $cipherText;
-    }
-
-    public static function decryptData($ciphertext)
-    {
-        $key = hash('sha256', SECRET_KEY);
-        $c = base64_decode($ciphertext);
-        $ivLen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
-        $iv = substr($c, 0, $ivLen);
-        $hmac = substr($c, $ivLen, $sha2len = 32);
-        $cipherTextRaw = substr($c, $ivLen + $sha2len);
-        $originalPlaintext = openssl_decrypt($cipherTextRaw, $cipher, $key, OPENSSL_RAW_DATA, $iv);
-        $calcMac = hash_hmac('sha256', $cipherTextRaw, $key, true);
-        if (hash_equals($hmac, $calcMac)) {
-            return $originalPlaintext;
-        }
-        return null;
     }
 }
