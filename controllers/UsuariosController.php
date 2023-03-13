@@ -2,7 +2,7 @@
 
 require_once 'models/UsuarioModel.php';
 
-class UsuariosController
+class UsuariosController extends Controller
 {
     private $usuarioModel;
     private $usuario;
@@ -12,23 +12,10 @@ class UsuariosController
         $this->usuarioModel = new UsuarioModel();
     }
 
-    private function loadView($view)
-    {
-        if (isset($_SESSION['active'])) {
-            include_once 'views/layout/header.php';
-            include_once 'views/layout/navbar.php';
-            include_once 'views/layout/sidebar.php';
-            require_once "views/usuarios/$view.php";
-            include_once 'views/layout/footer.php';
-        } else {
-            Utils::redirect(LOCATION_LOGIN);
-        }
-    }
-
     public function listar()
     {
         Utils::isAdmin();
-        $this->loadView('listar');
+        $this->loadView('usuarios/listar');
     }
 
     public function getDepartamentos()
@@ -53,7 +40,7 @@ class UsuariosController
     {
         $this->usuario = $this->usuarioModel->datosUsuario($_SESSION['idusuario']);
         if ($this->usuario) {
-            $this->loadView('perfil');
+            $this->loadView('usuarios/perfil');
         } else {
             Utils::redirect(LOCATION_LOGIN);
         }

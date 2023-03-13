@@ -5,6 +5,8 @@ class Controller
     protected $dataSession;
     private $primerdiadelmesactual;
     private $ultimodiadelmesactual;
+    protected $idqueja;
+    protected $queja;
 
     public function __construct()
     {

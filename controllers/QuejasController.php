@@ -1,39 +1,24 @@
 <?php
 require_once 'models/QuejasModel.php';
 
-class QuejasController
+class QuejasController extends Controller
 {
     private $quejasModel;
-    private $idqueja;
-    private $queja;
 
     public function __construct()
     {
         $this->quejasModel = new QuejasModel();
     }
 
-    private function loadView($view)
-    {
-        if (isset($_SESSION['active'])) {
-            include_once 'views/layout/header.php';
-            include_once 'views/layout/navbar.php';
-            include_once 'views/layout/sidebar.php';
-            require_once "views/quejas/$view.php";
-            include_once 'views/layout/footer.php';
-        } else {
-            Utils::redirect(LOCATION_LOGIN);
-        }
-    }
-
     public function index()
     {
         Utils::isAdmin();
-        $this->loadView('index');
+        $this->loadView('quejas/index');
     }
 
     public function crear()
     {
-        $this->loadView('crear');
+        $this->loadView('quejas/crear');
     }
 
     public function editar()
@@ -43,7 +28,7 @@ class QuejasController
             $this->queja = $this->quejasModel->getQueja($this->idqueja);
             if ($this->queja) {
                 if ($_SESSION['idusuario'] == $this->queja->idusuario) {
-                    $this->loadView('crear');
+                    $this->loadView('quejas/editar');
                 } else {
                     Utils::redirect(LOCATION_QUEJAS);
                 }
@@ -57,7 +42,7 @@ class QuejasController
 
     public function misquejas()
     {
-        $this->loadView('misquejas');
+        $this->loadView('quejas/misquejas');
     }
 
     public function ver()
@@ -66,7 +51,7 @@ class QuejasController
         if ($this->idqueja) {
             $this->queja = $this->quejasModel->getQueja($this->idqueja);
             if ($this->queja) {
-                $this->loadView('ver');
+                $this->loadView('quejas/ver');
             } else {
                 Utils::redirect(LOCATION_QUEJAS);
             }

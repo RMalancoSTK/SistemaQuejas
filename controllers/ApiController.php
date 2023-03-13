@@ -2,9 +2,7 @@
 require_once 'models/ApiModel.php';
 require_once 'models/QuejasModel.php';
 require_once 'models/UsuarioModel.php';
-
-
-class ApiController
+class ApiController extends Controller
 {
     private $apiModel;
     private $quejasModel;
@@ -12,6 +10,7 @@ class ApiController
 
     public function __construct()
     {
+        parent::__construct();
         $this->apiModel = new ApiModel();
         $this->quejasModel = new QuejasModel();
         $this->usuarioModel = new UsuarioModel();

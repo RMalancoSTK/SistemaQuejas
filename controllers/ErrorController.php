@@ -1,26 +1,18 @@
 <?php
 
-class ErrorController
+class ErrorController extends Controller
 {
     private $messageerror;
 
-    private function loadView($view)
+    public function __construct()
     {
-        if (isset($_SESSION['active'])) {
-            include_once 'views/layout/header.php';
-            include_once 'views/layout/navbar.php';
-            include_once 'views/layout/sidebar.php';
-            require_once "views/error/$view.php";
-            include_once 'views/layout/footer.php';
-        } else {
-            header(LOCATION_LOGIN);
-        }
+        parent::__construct();
     }
 
     public function index()
     {
         Utils::comprobarSesion();
-        $this->loadView('index');
+        $this->loadView('error/index');
     }
 
     public function getError404()
