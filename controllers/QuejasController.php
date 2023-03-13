@@ -28,7 +28,7 @@ class QuejasController extends Controller
             $this->queja = $this->quejasModel->getQueja($this->idqueja);
             if ($this->queja) {
                 if ($_SESSION['idusuario'] == $this->queja->idusuario) {
-                    $this->loadView('quejas/editar');
+                    $this->loadView('quejas/crear');
                 } else {
                     Utils::redirect(LOCATION_QUEJAS);
                 }
